@@ -1,24 +1,28 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import { IonContent, IonFooter, IonHeader, IonPage} from '@ionic/react';
 import './saida.css';
+import BotaoMais from '../components/BotaoMais';
+import Header from '../components/Header';
+import MenuLateral from '../components/MenuLateral';
+import BarraInferior from '../components/BarraInferior';
 
 function Saida() {
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>SAIDA</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">SAIDA</IonTitle>
-          </IonToolbar>
+    <>
+      <MenuLateral />
+      <IonPage id="main-content">
+        <IonHeader>
+          <Header nome='SAIDA' />
         </IonHeader>
-        <ExploreContainer name="SAIDA" />
-      </IonContent>
-    </IonPage>
+
+        <IonContent>
+          <BotaoMais />
+        </IonContent>
+
+        <IonFooter>
+          <BarraInferior />
+        </IonFooter>
+      </IonPage>
+    </>
   );
 };
 

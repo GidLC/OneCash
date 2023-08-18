@@ -1,29 +1,28 @@
-import { IonAvatar, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import {IonContent, IonFooter, IonHeader,IonPage} from '@ionic/react';
 import './casal.css';
-import { personCircleOutline } from 'ionicons/icons';
+import BotaoMais from '../components/BotaoMais';
+import Header from '../components/Header';
+import MenuLateral from '../components/MenuLateral';
+import BarraInferior from '../components/BarraInferior';
 
-function Casal () {
+function Casal() {
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonAvatar>
-          <IonIcon aria-hidden="true" icon={personCircleOutline} />
-          </IonAvatar>
-          <IonTitle>CASAL</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">CASAL</IonTitle>
-          </IonToolbar>
+    <>
+      <MenuLateral />
+      <IonPage id="main-content">
+        <IonHeader>
+          <Header nome='CASAL' />
         </IonHeader>
-        <ExploreContainer name="CASAL" />
-      </IonContent>
-    </IonPage>
+
+        <IonContent>
+          <BotaoMais />
+        </IonContent>
+
+        <IonFooter>
+          <BarraInferior />
+        </IonFooter>
+      </IonPage>
+    </>
   );
 };
 

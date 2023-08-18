@@ -1,17 +1,17 @@
 import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import './entrada.css';
+import './saida.css';
 import BotaoMais from '../components/BotaoMais';
 import Header from '../components/Header';
 import MenuLateral from '../components/MenuLateral';
 import BarraInferior from '../components/BarraInferior';
 
-function Entrada() {
+function AddReceita() {
   return (
     <>
       <MenuLateral />
       <IonPage id="main-content">
         <IonHeader>
-          <Header nome='ENTRADA' />
+          <Header nome='ADICIONAR RECEITA' />
         </IonHeader>
 
         <IonContent>
@@ -26,4 +26,4 @@ function Entrada() {
   );
 };
 
-export default Entrada;
+export default AddReceita;
