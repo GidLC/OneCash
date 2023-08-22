@@ -4,6 +4,7 @@ import BotaoMais from '../../components/BotaoMais';
 import MenuLateral from '../../components/MenuLateral';
 import Header from '../../components/Header';
 import BarraInferior from '../../components/BarraInferior';
+import HeaderHome from '../../components/HeaderHome';
 
 function Home() {
   return (
@@ -11,7 +12,7 @@ function Home() {
       <MenuLateral />
       <IonPage id="main-content">
         <IonHeader>
-          <Header nome='HOME' />
+          <HeaderHome nome='HOME' />
         </IonHeader>
 
         <IonContent>
