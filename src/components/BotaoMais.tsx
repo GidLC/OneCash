@@ -1,4 +1,4 @@
-import {IonFab, IonFabButton, IonFabList, IonIcon } from '@ionic/react';
+import { IonFab, IonFabButton, IonFabList, IonIcon, IonLabel } from '@ionic/react';
 import { add, analyticsOutline, walletOutline } from 'ionicons/icons';
 
 function BotaoMais() {
@@ -10,6 +10,7 @@ function BotaoMais() {
       </IonFabButton>
 
       <IonFabList side="top">
+        <IonLabel>Receitas</IonLabel>
         <IonFabButton color="success" href='/addReceita'>
           <IonIcon icon={walletOutline}></IonIcon>
         </IonFabButton>

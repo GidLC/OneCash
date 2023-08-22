@@ -1,0 +1,9 @@
+.logoLogin {
+    width: 20%;
+}
+
+@media(min-width: 850px) {
+    .logoLogin{
+        width: 10%;
+    }
+}

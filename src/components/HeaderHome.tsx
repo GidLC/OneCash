@@ -12,25 +12,17 @@ const Header: React.FC<HeaderProps> = ({ nome }) => {
     <>
       <IonHeader>
         <IonToolbar>
-
-        <IonGrid>
+          <IonGrid>
             <IonRow>
-              <IonCol size="auto">
-                  <IonTabButton href="/home">
-                    <IonIcon aria-hidden="false" icon={arrowBackCircleOutline} size="large"/>
-                  </IonTabButton>
-              </IonCol>
               <IonCol>
-                  <IonTitle size="large">{nome}</IonTitle>
+                <IonTitle size="large">{nome}</IonTitle>
               </IonCol>
               <IonCol size="auto">
-
                 <div>
                   <IonButtons slot="end">
                     <IonMenuButton></IonMenuButton>
                   </IonButtons>
                 </div>
-                
               </IonCol>
             </IonRow>
           </IonGrid>
