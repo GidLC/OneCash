@@ -1,14 +1,31 @@
-import { IonContent, IonHeader, IonPage, IonToolbar, IonInput, IonButton, IonImg, IonTitle, IonRow, IonCol, IonFooter } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, IonInput, IonButton, IonImg, IonTitle, IonRow, IonCol, IonFooter, IonAlert } from '@ionic/react';
 import React, { useState } from 'react';
 import './login.css';
 import '../../theme/variables.css'
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [senha, setSenha] = useState('');
 
-    const realizaLogin = () => {
+    const validaLogin = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
+        if (email == "gideonilacerda@gmail.com") {
+            const novoLogin = {
+                email: email,
+                senha: senha
+            }
+            console.log("Dados enviados:", { novoLogin });
+            setEmail('');
+            setSenha('');
+        } else {
+            <IonAlert
+                trigger="ALERTA!!!"
+                header="Email inválido"
+                message="Esse email não está cadastrado!"
+                buttons={['OK']}
+            ></IonAlert>
+        }
     };
 
     return (
@@ -16,16 +33,18 @@ const Login: React.FC = () => {
             <IonHeader>
                 <IonToolbar>
                     <IonRow className='cabecalhoLogin'>
-                        <IonImg src="public/icon.png" alt='Logo OneCash' className='logoLogin' />
+                        <IonImg src="src\img\icon96x96.png" alt='Logo OneCash' className='logoLogin' />
                         <IonTitle>OneCash</IonTitle>
                     </IonRow>
                 </IonToolbar>
             </IonHeader>
 
             <IonContent className='conteudoLogin'>
+                <form onSubmit={validaLogin}>
                     <IonInput type='email' placeholder="Email" value={email} onIonChange={e => setEmail(e.detail.value!)}></IonInput>
-                    <IonInput type="password" placeholder="Senha" value={password} onIonChange={e => setPassword(e.detail.value!)}></IonInput>
-                    <IonButton expand="full" onClick={realizaLogin} color="success">Entrar</IonButton>
+                    <IonInput type="password" placeholder="Senha" value={senha} onIonChange={e => setSenha(e.detail.value!)}></IonInput>
+                    <IonButton expand="block" type="submit" color="success">Entrar</IonButton>
+                </form>
             </IonContent>
 
             <IonFooter>
