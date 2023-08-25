@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonAlert } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonTabButton, IonIcon } from '@ionic/react';
 import './Cadastro.css';
 import { SQLiteDBConnection } from "@capacitor-community/sqlite";
 import useSQLiteDB from '../../composables/useSQLiteDB';
-import useConfirmationAlert from '../../composables/useConfirmationAlert';
+import { arrowBackCircleOutline } from 'ionicons/icons';
 
 
 const Cadastro: React.FC = () => {
@@ -15,45 +15,45 @@ const Cadastro: React.FC = () => {
   // Hook para o BD
   const { performSQLAction, initialized } = useSQLiteDB();
 
-  // Hook para o diálogo de confirmação
-  const { showConfirmationAlert, ConfirmationAlert } = useConfirmationAlert();
+  const novoCadastro = {
+    nome: nome,
+    email: email,
+    senha: senha,
+  }
+  console.log('Dados enviados:', { novoCadastro });
 
-    const novoCadastro = {
-      nome: nome,
-      email: email,
-      senha: senha,
+  const cadUsuario = async () => {
+    try {
+
+      performSQLAction(
+        async (db: SQLiteDBConnection | undefined) => {
+          await db?.query(`INSERT INTO usuario (id,nome, email, senha) values (?,?,?,?);`, [
+            Date.now(),
+            nome,
+            email,
+            senha
+          ]);
+        },
+        async () => {
+          setNome("");
+          setEmail("");
+          setSenha("");
+          alert("Usuário Cadastrado");
+        }
+      );
+    } catch (error) {
+      alert((error as Error).message);
     }
-    console.log('Dados enviados:', { novoCadastro });
-
-    const cadUsuario = async () => {
-      try {
-
-        performSQLAction(
-          async (db: SQLiteDBConnection | undefined) => {
-            await db?.query(`INSERT INTO usuario (id,nome, email, senha) values (?,?,?,?);`, [
-              Date.now(),
-              nome,
-              email,
-              senha
-            ]);
-          },
-          async () => {
-            setNome("");
-            setEmail("");
-            setSenha("");
-            alert("Usuário Cadastrado");
-          }
-        );
-      } catch (error) {
-        alert((error as Error).message);
-      }
-    };
+  };
 
 
   return (
     <IonPage>
       <IonHeader color='primary'>
         <IonToolbar>
+          <IonTabButton href="/">
+            <IonIcon aria-hidden="false" icon={arrowBackCircleOutline} size="size" />
+          </IonTabButton>
           <IonTitle>CADASTRAR</IonTitle>
         </IonToolbar>
       </IonHeader>

@@ -16,8 +16,8 @@ import { AutenticacaoProvider } from "../contexts/autenticaLogin";
 const AppRoutes: React.FC = () => {
   return (<>
     <IonReactRouter>
-      <IonRouterOutlet>
-        <AutenticacaoProvider>
+      <AutenticacaoProvider>
+        <IonRouterOutlet>
           <Route path="/login">
             <Login />
           </Route>
@@ -57,8 +57,8 @@ const AppRoutes: React.FC = () => {
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
-        </AutenticacaoProvider>
-      </IonRouterOutlet>
+        </IonRouterOutlet>
+      </AutenticacaoProvider>
     </IonReactRouter >
   </>
   );

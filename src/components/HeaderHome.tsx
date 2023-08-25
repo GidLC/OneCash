@@ -1,13 +1,15 @@
-import { IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonTabButton, IonIcon, IonCol, IonRow, IonGrid, } from "@ionic/react";
-import { arrowBackCircleOutline } from "ionicons/icons";
-import React from "react";
+import { IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonCol, IonRow, IonGrid, } from "@ionic/react";
+import React, { useContext } from "react";
 import './Header.css'
+import AuthContext from "../contexts/autenticaLogin";
 
 interface HeaderProps {
   nome: string;
 }
 
 const Header: React.FC<HeaderProps> = ({ nome }) => {
+  const Auth = useContext(AuthContext);
+
   return (
     <>
       <IonHeader>
@@ -16,6 +18,7 @@ const Header: React.FC<HeaderProps> = ({ nome }) => {
             <IonRow>
               <IonCol>
                 <IonTitle size="large">{nome}</IonTitle>
+                <IonTitle size="large">{Auth?.login.name}</IonTitle>
               </IonCol>
               <IonCol size="auto">
                 <div>
