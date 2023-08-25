@@ -10,47 +10,58 @@ import Login from "../pages/login/login";
 import AddDespesa from "../pages/despesas/addDespesa";
 import AddReceita from "../pages/receitas/addReceita";
 import Cadastro from "../pages/cadastro/cadastro";
+import TesteCadastro from "../pages/cadastro/testeCadastro";
+import { AutenticacaoProvider } from "../contexts/autenticaLogin";
 
-const AppRoutes: React.FC = () => (
-  <IonReactRouter>
-    <IonRouterOutlet>
-      <Route path="/login">
-        <Login />
-      </Route>
+const AppRoutes: React.FC = () => {
+  return (<>
+    <IonReactRouter>
+      <IonRouterOutlet>
+        <AutenticacaoProvider>
+          <Route path="/login">
+            <Login />
+          </Route>
 
-      <Route path="/cadastro">
-        <Cadastro />
-      </Route>
+          <Route path="/testeCadastro">
+            <TesteCadastro />
+          </Route>
 
-      <Route exact path="/home">
-        <Home />
-      </Route>
+          <Route path="/cadastro">
+            <Cadastro />
+          </Route>
 
-      <Route exact path="/entrada">
-        <Entrada />
-      </Route>
+          <Route exact path="/home">
+            <Home />
+          </Route>
 
-      <Route path="/saida">
-        <Saida />
-      </Route>
+          <Route exact path="/entrada">
+            <Entrada />
+          </Route>
 
-      <Route path="/casal">
-        <Casal />
-      </Route>
+          <Route path="/saida">
+            <Saida />
+          </Route>
 
-      <Route path="/addDespesa">
-        <AddDespesa />
-      </Route>
+          <Route path="/casal">
+            <Casal />
+          </Route>
 
-      <Route path="/addReceita">
-        <AddReceita />
-      </Route>
+          <Route path="/addDespesa">
+            <AddDespesa />
+          </Route>
 
-      <Route exact path="/">
-        <Redirect to="/login" />
-      </Route>
-    </IonRouterOutlet>
-  </IonReactRouter>
-);
+          <Route path="/addReceita">
+            <AddReceita />
+          </Route>
+
+          <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+        </AutenticacaoProvider>
+      </IonRouterOutlet>
+    </IonReactRouter >
+  </>
+  );
+};
 
 export default AppRoutes;

@@ -2,6 +2,13 @@ import {
   setupIonicReact
 } from '@ionic/react';
 
+import { useSQLite } from 'react-sqlite-hook';
+import React from 'react';
+
+export let sqlite: any;
+
+export let existingConn: any;
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -24,8 +31,10 @@ import AppRoutes from './router/AppRoutes';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-      <AppRoutes />
-);
+const App: React.FC = () => {
+  return (
+    <AppRoutes />
+  )
+};
 
 export default App;
