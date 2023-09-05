@@ -18,7 +18,6 @@ const Header: React.FC<HeaderProps> = ({ nome }) => {
             <IonRow>
               <IonCol>
                 <IonTitle size="large">{nome}</IonTitle>
-                <IonTitle size="large">{Auth?.login.name}</IonTitle>
               </IonCol>
               <IonCol size="auto">
                 <div>

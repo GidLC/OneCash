@@ -12,6 +12,7 @@ import AddReceita from "../pages/receitas/addReceita";
 import Cadastro from "../pages/cadastro/cadastro";
 import TesteCadastro from "../pages/cadastro/testeCadastro";
 import { AutenticacaoProvider } from "../contexts/autenticaLogin";
+import TesteReceitas from "../pages/receitas/testeReceitas";
 
 const AppRoutes: React.FC = () => {
   return (<>
@@ -24,6 +25,10 @@ const AppRoutes: React.FC = () => {
 
           <Route path="/testeCadastro">
             <TesteCadastro />
+          </Route>
+
+          <Route path="/testeReceitas">
+            <TesteReceitas />
           </Route>
 
           <Route path="/cadastro">
@@ -55,7 +60,7 @@ const AppRoutes: React.FC = () => {
           </Route>
 
           <Route exact path="/">
-            <Redirect to="/login" />
+            <Redirect to="/home" />
           </Route>
         </IonRouterOutlet>
       </AutenticacaoProvider>

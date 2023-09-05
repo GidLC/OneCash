@@ -29,7 +29,7 @@ export const AutenticacaoProvider: React.FC<AutenticacaoProviderProps> = ({ chil
 
     const logout = () => {
         setUsuario(null);
-        navegador.push("/");
+        navegador.push("/login");
     };  
 
     return (

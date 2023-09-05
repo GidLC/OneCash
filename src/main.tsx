@@ -23,11 +23,11 @@ window.addEventListener("DOMContentLoaded", async () => {
       const jeepSqliteEl = document.createElement("jeep-sqlite");
       document.body.appendChild(jeepSqliteEl);
       await customElements.whenDefined("jeep-sqlite");
-      console.log(`after customElements.whenDefined`);
+      console.log(`Elemento jeep-sqlite definido`);
 
       // Inicializa a Web
       await sqlite.initWebStore();
-      console.log(`after initWebStore`);
+      console.log(`Plataforma Web Inicializada`);
     }
 
     const container = document.getElementById("root");

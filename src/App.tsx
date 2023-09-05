@@ -2,7 +2,6 @@ import {
   setupIonicReact
 } from '@ionic/react';
 
-import { useSQLite } from 'react-sqlite-hook';
 import React from 'react';
 
 export let sqlite: any;

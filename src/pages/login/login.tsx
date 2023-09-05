@@ -47,7 +47,7 @@ const Login: React.FC = () => {
             <IonHeader>
                 <IonToolbar>
                     <IonRow className='cabecalhoLogin'>
-                        <IonImg src="src\img\icon96x96.png" alt='Logo OneCash' className='logoLogin' />
+                        <IonImg src="icon96x96.png" alt='Logo OneCash' className='logoLogin' />
                         <IonTitle>OneCash</IonTitle>
                     </IonRow>
                 </IonToolbar>
@@ -72,7 +72,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-function useNavigate() {
-    throw new Error('Function not implemented.');
-}
-
