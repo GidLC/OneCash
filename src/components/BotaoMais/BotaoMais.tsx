@@ -1,9 +1,13 @@
-import { IonFab, IonFabButton, IonFabList, IonIcon, IonLabel } from '@ionic/react';
+import { IonFab, IonFabButton, IonFabList, IonIcon, IonLabel, IonText } from '@ionic/react';
 import { add, analyticsOutline, walletOutline } from 'ionicons/icons';
 
-function BotaoMais() {
+interface BotaoMaisProps {
+  lado: any;
+}
+
+const BotaoMais: React.FC<BotaoMaisProps> = ({ lado }) => {
   return (
-    <IonFab slot="fixed" horizontal="center" vertical="bottom">
+    <IonFab slot="fixed" horizontal={lado} vertical="bottom">
 
       <IonFabButton color="primary">
         <IonIcon icon={add}></IonIcon>
@@ -21,12 +25,14 @@ function BotaoMais() {
           <IonIcon icon={analyticsOutline}>
           </IonIcon>
         </IonFabButton>
+      <IonText>Investimentos</IonText>
       </IonFabList>
 
       <IonFabList side="start">
         <IonFabButton color="danger" href="/addDespesa">
           <IonIcon icon={walletOutline}></IonIcon>
         </IonFabButton>
+        <IonText>Despesas</IonText>
       </IonFabList>
 
     </IonFab>

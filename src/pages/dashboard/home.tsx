@@ -1,11 +1,66 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFooter, IonHeader, IonPage } from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonPage, IonRow } from '@ionic/react';
 import './home.css';
-import BotaoMais from '../../components/BotaoMais';
-import MenuLateral from '../../components/MenuLateral';
-import BarraInferior from '../../components/BarraInferior';
-import HeaderHome from '../../components/HeaderHome';
+import BotaoMais from '../../components/BotaoMais/BotaoMais';
+import MenuLateral from '../../components/MenuLateral/MenuLateral';
+import BarraInferior from '../../components/BarraInferior/BarraInferior';
+import HeaderHome from '../../components/HeaderHome/HeaderHome';
+import { SQLiteDBConnection } from "@capacitor-community/sqlite";
+import useSQLiteDB from "../../composables/useSQLiteDB";
+import { useEffect, useState } from 'react';
+
+
+type SQLItem = {
+  receitas: number;
+  despesas: number;
+  saldo: number;
+}
 
 function Home() {
+    // Hook para o banco de dados SQLite
+    const { performSQLAction, initialized } = useSQLiteDB();
+
+    useEffect(() => {
+      carregandoReceitas();
+      carregandoDespesas();
+    }, [initialized]);
+
+  const [itemsReceita, setItemsReceita] = useState<Array<SQLItem>>(); // Estado para rastrear os itens da base de dados
+  const [itemsDespesa, setItemsDespesa] = useState<Array<SQLItem>>();
+  const receitas: any = itemsReceita?.[0]?.['receitas'];
+  const despesas: any = itemsDespesa?.[0]?.['despesas'];
+  const saldo = receitas - despesas;
+
+  /**
+   * Realiza uma consulta na base de dados para carregar os itens.
+   */
+  const carregandoReceitas = async () => {
+    try {
+      performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+        const respSelect = await db?.query(`SELECT sum(valor_receita) as receitas FROM receita WHERE status_receita = 1`);
+        setItemsReceita(respSelect?.values);
+        console.log(respSelect?.values);
+      });
+    } catch (error) {
+      alert((error as Error).message);
+      setItemsReceita([]);
+    }
+  };
+
+  const carregandoDespesas = async () => {
+    try {
+      performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+        const respSelect = await db?.query(`SELECT sum(valor_despesa) as despesas FROM despesa WHERE status_despesa = 1`);
+        setItemsDespesa(respSelect?.values);
+        console.log(respSelect?.values);
+      });
+    } catch (error) {
+      alert((error as Error).message);
+      setItemsDespesa([]);
+    }
+  };
+  console.log(`Soma Receitas:`, itemsReceita);
+
+
   return (
     <>
       <MenuLateral />
@@ -15,24 +70,44 @@ function Home() {
         </IonHeader>
 
         <IonContent>
-          <a href='/entrada'>
-            <IonCard color="success">
-              <IonCardHeader>
-                <IonCardTitle>RECEITAS</IonCardTitle>
-                <IonCardSubtitle>R$5.000,00</IonCardSubtitle>
-              </IonCardHeader>
-            </IonCard>
-          </a>
+          <IonGrid>
+            <IonRow>
+              <IonCol>
+                <IonCard color="primary">
+                  <IonCardHeader>
+                    <IonCardTitle>SALDO:</IonCardTitle>
+                    <IonCardSubtitle>{`R$ ${saldo}`}</IonCardSubtitle>
+                  </IonCardHeader>
+                </IonCard>
+              </IonCol>
+            </IonRow>
 
-          <a href='/saida'>
-            <IonCard color="danger">
-              <IonCardHeader>
-                <IonCardTitle>DESPESAS</IonCardTitle>
-                <IonCardSubtitle>R$3.000,00</IonCardSubtitle>
-              </IonCardHeader>
-            </IonCard>
-          </a>
-          <BotaoMais />
+            <IonRow>
+              <IonCol>
+                <a href='/entrada'>
+                  <IonCard color="success">
+                    <IonCardHeader>
+                      <IonCardTitle>RECEITAS</IonCardTitle>
+                      <IonCardSubtitle>{`R$ ${receitas}`}</IonCardSubtitle>
+                    </IonCardHeader>
+                  </IonCard>
+
+                </a>
+              </IonCol>
+
+              <IonCol>
+                <a href='/saida'>
+                  <IonCard color="danger">
+                    <IonCardHeader>
+                      <IonCardTitle>DESPESAS</IonCardTitle>
+                      <IonCardSubtitle>{`R$ ${despesas}`}</IonCardSubtitle>
+                    </IonCardHeader>
+                  </IonCard>
+                </a>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+          <BotaoMais lado="center"/>
         </IonContent>
 
         <IonFooter>

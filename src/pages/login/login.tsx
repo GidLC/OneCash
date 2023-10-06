@@ -1,5 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonToolbar, IonInput, IonButton, IonImg, IonTitle, IonRow, IonFooter } from '@ionic/react';
-import React, { useContext, useState } from 'react';
+import { IonContent, IonHeader, IonPage, IonToolbar, IonButton, IonImg, IonTitle, IonRow, IonFooter, IonGrid, IonCol, IonSelect, IonList, IonItem, IonText, IonSelectOption } from '@ionic/react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './login.css';
 import '../../theme/variables.css'
@@ -7,32 +7,56 @@ import AuthContext from '../../contexts/autenticaLogin';
 import { SQLiteDBConnection } from 'react-sqlite-hook';
 import useSQLiteDB from '../../composables/useSQLiteDB';
 
-const Login: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const Auth = useContext(AuthContext);
+type UsuarioBd = {
+    id: string,
+    nome: string,
+    email: string,
+    senha: string
+}
 
+type UsuarioEscolhido = {
+    id: string,
+    nome: string,
+    email: string,
+    senha: string
+}
+
+const Login: React.FC = () => {
     const { performSQLAction, initialized } = useSQLiteDB();
 
-    const validaLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    useEffect(() => {
+        buscaUsuario();
+    }, [initialized]);
 
+    const [usuarioBd, setUsuarioBd] = useState(Array<UsuarioBd>);
+    const [UsuarioEscolhido, setUsuarioEscolhido] = useState(Array<UsuarioEscolhido>)
+    const [id, setId] = useState<any>();
+    const [email, setEmail] = useState('');
+    const [nome, setNome] = useState('');
+    const Auth = useContext(AuthContext);
+
+    const buscaUsuario = async () => {
         try {
             performSQLAction(async (db: SQLiteDBConnection | undefined) => {
-                const query = await db?.query(`SELECT * FROM usuario WHERE email = ? AND senha = ?`, [
-                    email,
-                    senha
-                ]);
+                const query = await db?.query(`SELECT * FROM usuario`);
+                setUsuarioBd(query?.values);
 
-                if (query && query.values && query.values.length > 0) {
-                    console.log('Usuário autenticado!');
-                    Auth?.login(email, senha);
-                    console.log("Email:" + email + " senha:" + senha);
-                } else {
-                    console.log('Usuário não encontrado ou senha incorreta.');
-                    alert('Usuário não encontrado ou senha incorreta.');
-                }
+                UsuarioEscolhido.map((usuario) => (
+                    setId(usuario.id),
+                    setEmail(usuario.email),
+                    setNome(usuario.nome)
+                ))
             });
+        } catch (error) {
+            console.error((error as Error).message);
+        }
+    }
+
+
+    const validaLogin = async () => {
+        try {
+            Auth?.login(id, nome, email);
+            console.log("login")
         } catch (error) {
             console.error((error as Error).message);
         }
@@ -46,26 +70,53 @@ const Login: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonRow className='cabecalhoLogin'>
-                        <IonImg src="icon96x96.png" alt='Logo OneCash' className='logoLogin' />
-                        <IonTitle>OneCash</IonTitle>
-                    </IonRow>
+                    <IonGrid>
+                        <IonRow className='cabecalhoLogin'>
+                            <IonCol size='4'></IonCol>
+                            <IonCol className='icones' size='12'>
+                                <div className='div-icones'>
+                                    <IonImg src="icon96x96.png" alt='Logo OneCash' className='logoLogin' />
+                                    <IonTitle>OneCash</IonTitle>
+                                </div>
+                            </IonCol>
+                            <IonCol size='4'></IonCol>
+                        </IonRow>
+                    </IonGrid>
                 </IonToolbar>
             </IonHeader>
 
             <IonContent className='conteudoLogin'>
-                <form onSubmit={validaLogin}>
-                    <IonInput type='email' placeholder="Email" value={email} onIonChange={e => setEmail(e.detail.value!)}></IonInput>
-                    <IonInput type="password" placeholder="Senha" value={senha} onIonChange={e => setSenha(e.detail.value!)}></IonInput>
-                    <IonButton expand="block" type="submit" color="success">Entrar</IonButton>
-                </form>
+                {/*<IonInput type='email' placeholder="Email" value={email} onIonChange={e => setEmail(e.detail.value!)}></IonInput>
+                <IonInput type="password" placeholder="Senha" value={senha} onIonChange={e => setSenha(e.detail.value!)}></IonInput>*/}
+                <IonList>
+                    <IonItem>
+                        <IonSelect
+                            onIonChange={e => setUsuarioEscolhido(e.detail.value)}
+                            placeholder="Selecione o Usuário"
+                            okText='SELECIONAR'
+                            cancelText='VOLTAR'>
+                            {usuarioBd?.map((usuario) => (
+                                <IonSelectOption key={usuario.id} value={usuario}>
+                                    {usuario.nome}
+                                </IonSelectOption>
+                            ))}
+                        </IonSelect>
+                    </IonItem>
+                </IonList>
+
+                <IonButton expand="block" type="submit" color="success" onClick={validaLogin}>Entrar</IonButton>
             </IonContent>
 
             <IonFooter>
-                <IonRow>
-                    <IonButton href='/cadastro'>Não tenho conta <br></br> Cadastrar-se</IonButton>
-                    <IonButton>Esqueci a senha</IonButton>
-                </IonRow>
+                <IonGrid>
+                    <IonRow>
+                        <IonCol size='4'></IonCol>
+                        <IonCol>
+                            <IonButton href='/cadastro'>Cadastrar-se no Aplicativo</IonButton>
+                        </IonCol>
+                        <IonCol size='4'></IonCol>
+                    </IonRow>
+                </IonGrid>
             </IonFooter>
         </IonPage>
     );

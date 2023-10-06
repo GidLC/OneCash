@@ -7,6 +7,7 @@ import {
     IonItem,
     IonLabel,
     IonItemGroup,
+    IonItemDivider,
     IonList,
     IonTabButton,
     IonIcon,
@@ -14,26 +15,21 @@ import {
 import React, { useEffect, useState } from "react";
 import { SQLiteDBConnection } from "@capacitor-community/sqlite";
 import useSQLiteDB from "../../composables/useSQLiteDB";
-import useConfirmationAlert from "../../composables/useConfirmationAlert";
 import { arrowBackCircleOutline } from "ionicons/icons";
 
 type SQLItem = {
-    descricao: number;
-    valor: string;
-    destino: string;
-    categoria: string;
-    status: string;
+    id: number,
+    nome: string,
+    cor: string
 };
 
-const TesteReceitas: React.FC = () => {
+const TesteCategoria: React.FC = () => {
     const [items, setItems] = useState<Array<SQLItem>>(); // Estado para rastrear os itens da base de dados
 
     //////INICIALIZA O BD///////
 
     // Hook para o banco de dados SQLite
     const { performSQLAction, initialized } = useSQLiteDB();
-    // Hook para o diálogo de confirmação
-    const { showConfirmationAlert, ConfirmationAlert } = useConfirmationAlert();
 
 
     //////CARREGA OS DADOS///////
@@ -49,28 +45,31 @@ const TesteReceitas: React.FC = () => {
         try {
             // Consulta a base de dados
             performSQLAction(async (db: SQLiteDBConnection | undefined) => {
-                const respSelect = await db?.query(`SELECT * FROM receitas`);
+                const respSelect = await db?.query(`SELECT * FROM categoria_receita`);
                 setItems(respSelect?.values);
             });
+            
         } catch (error) {
             alert((error as Error).message);
             setItems([]);
         }
     };
 
+    console.log(items)
+
     // Função para renderizar a página
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTabButton href="/addReceita">
+                    <IonTabButton href="/categoria">
                         <IonIcon aria-hidden="false" icon={arrowBackCircleOutline} size="size" />
                     </IonTabButton>
-                    <IonTitle>CADASTRO DE RECEITAS</IonTitle>
+                    <IonTitle>CADASTRO DE CATEGORIAS</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen className="ion-padding">
-                <h3>RECEITAS NO SQLITE</h3>
+                <h3>OS DADOS DO SQLITE</h3>
 
                 <IonItem >
                     <IonLabel className="ion-text-wrap"></IonLabel>
@@ -79,27 +78,23 @@ const TesteReceitas: React.FC = () => {
                 {items?.map((item) => (
                     <IonList>
                         <IonItemGroup>
+                            <IonItemDivider>
+                                <IonLabel>{item.id}</IonLabel>
+                            </IonItemDivider>
+
                             <IonItem>
-                                <IonLabel>Valor: {item.valor}</IonLabel>
+                                <IonLabel>Nome: {item.nome}</IonLabel>
                             </IonItem>
 
                             <IonItem>
-                                <IonLabel>Destino: {item.destino}</IonLabel>
-                            </IonItem>
-
-                            <IonItem>
-                                <IonLabel>Categoria: {item.categoria}</IonLabel>
+                                <IonLabel>Cor: {item.cor}</IonLabel>
                             </IonItem>
                         </IonItemGroup>
                     </IonList>
-
-
                 ))}
-
-                {ConfirmationAlert}
             </IonContent>
         </IonPage>
     );
 };
 
-export default TesteReceitas;
+export default TesteCategoria;

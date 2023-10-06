@@ -1,7 +1,6 @@
 import { IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonCol, IonRow, IonGrid, } from "@ionic/react";
 import React, { useContext } from "react";
-import './Header.css'
-import AuthContext from "../contexts/autenticaLogin";
+import AuthContext from "../../contexts/autenticaLogin";
 
 interface HeaderProps {
   nome: string;

@@ -3,14 +3,15 @@ import { useHistory } from 'react-router';
 
 const AuthContext = createContext<AutenticaProps | undefined>(undefined);
 
-interface Usuarios {
-    email: string;
-    senha: string
+interface UsuarioProps {
+    id: number,
+    email: string,
+    nome: string,
 }
 
 interface AutenticaProps {
-    usuario: Usuarios | null;
-    login: (usuario: any, senha: any) => void;
+    usuario: UsuarioProps | null;
+    login: (id: any, nome: any, senha: any) => void;
     logout: () => void;
 }
 
@@ -19,12 +20,12 @@ interface AutenticacaoProviderProps {
 }
 
 export const AutenticacaoProvider: React.FC<AutenticacaoProviderProps> = ({ children }) => {
-    const [usuario, setUsuario] = useState<Usuarios | null>(null);
+    const [usuario, setUsuario] = useState<UsuarioProps | null>(null);
     const navegador = useHistory();
 
-    const login = (userData: Usuarios) => {
+    const login = (userData: UsuarioProps) => {
         setUsuario(userData);
-        navegador.push("/home");
+        navegador.push("/home")
     };
 
     const logout = () => {
@@ -33,7 +34,11 @@ export const AutenticacaoProvider: React.FC<AutenticacaoProviderProps> = ({ chil
     };  
 
     return (
-        <AuthContext.Provider value={{ usuario, login, logout }}>
+        <AuthContext.Provider 
+        value={{
+                usuario,
+                login,
+                logout }}>
             {children}
         </AuthContext.Provider>
     );

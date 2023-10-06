@@ -58,6 +58,8 @@ const TesteCadastro: React.FC = () => {
         }
     };
 
+    console.log(items)
+
     // Função para renderizar a página
     return (
         <IonPage>
@@ -99,8 +101,6 @@ const TesteCadastro: React.FC = () => {
 
 
                 ))}
-
-                {ConfirmationAlert}
             </IonContent>
         </IonPage>
     );

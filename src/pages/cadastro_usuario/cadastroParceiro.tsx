@@ -1,47 +1,36 @@
 import React, {useState } from 'react';
 import { useHistory } from 'react-router';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonTabButton, IonIcon } from '@ionic/react';
-import './Cadastro.css';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonTabButton, IonIcon, IonGrid, IonRow } from '@ionic/react';
+import './cadastro_usuario.css';
 import { SQLiteDBConnection } from "@capacitor-community/sqlite";
 import useSQLiteDB from '../../composables/useSQLiteDB';
 import { arrowBackCircleOutline } from 'ionicons/icons';
 
 
-const Cadastro: React.FC = () => {
+const CadastroParceiro: React.FC = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confSenha, setConfSenha] = useState('');
 
   const navegador = useHistory();
 
   // Hook para o BD
   const { performSQLAction, initialized } = useSQLiteDB();
 
-  const novoCadastro = {
-    nome: nome,
-    email: email,
-    senha: senha,
-  }
-  console.log('Dados enviados:', { novoCadastro });
-
+  //Antes de cadastrar é necessário verificar se já existem dois cadastros no banco de dados, pois devem se limitar a dois
   const cadUsuario = async () => {
     try {
 
       performSQLAction(
         async (db: SQLiteDBConnection | undefined) => {
-          await db?.query(`INSERT INTO usuario (id,nome, email, senha) values (?,?,?,?);`, [
-            Date.now(),
+          await db?.query(`INSERT INTO usuario (nome, email) values (?,?);`, [
             nome,
             email,
-            senha
           ]);
         },
 
         async () => {
           setNome("");
           setEmail("");
-          setSenha("");
           alert("Usuário Cadastrado");
           navegador.push("/");
         }
@@ -56,17 +45,20 @@ const Cadastro: React.FC = () => {
     <IonPage>
       <IonHeader color='primary'>
         <IonToolbar>
-          <IonTabButton href="/">
-            <IonIcon aria-hidden="false" icon={arrowBackCircleOutline} size="size" />
-          </IonTabButton>
-          <IonTitle>CADASTRAR</IonTitle>
+          <IonGrid>   
+            <IonRow>
+              <IonTabButton href="/">
+                <IonIcon aria-hidden="false" icon={arrowBackCircleOutline} size="size" />
+              </IonTabButton>
+              <IonTitle>Cadastre agora seu parceiro</IonTitle>
+            </IonRow>
+          </IonGrid>
         </IonToolbar>
       </IonHeader>
+
       <IonContent>
-          <IonInput type="text" placeholder="Nome" value={nome} onIonChange={e => setNome(e.detail.value!)}></IonInput>
+          <IonInput type="text" placeholder="Primeiro nome" value={nome} onIonChange={e => setNome(e.detail.value!)}></IonInput>
           <IonInput type="email" placeholder="Email" value={email} onIonChange={e => setEmail(e.detail.value!)}></IonInput>
-          <IonInput type="password" placeholder="Senha" value={senha} onIonChange={e => setSenha(e.detail.value!)}></IonInput>
-          <IonInput type="password" placeholder="Confirme a Senha" value={confSenha} onIonChange={e => setConfSenha(e.detail.value!)}></IonInput>
           <IonButton expand="block" type="submit" color="success" onClick={cadUsuario}>Cadastrar</IonButton>
         <IonButton href='/testeCadastro'>TESTE BD</IonButton>
       </IonContent>
@@ -74,4 +66,4 @@ const Cadastro: React.FC = () => {
   );
 };
 
-export default Cadastro;
+export default CadastroParceiro;

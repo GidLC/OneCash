@@ -1,5 +1,5 @@
-import {IonButton, IonContent, IonHeader, IonMenu,IonTitle, IonToolbar } from '@ionic/react';
-import AuthContext from '../contexts/autenticaLogin';
+import { IonButton, IonContent, IonHeader, IonMenu, IonTitle, IonToolbar } from '@ionic/react';
+import AuthContext from '../../contexts/autenticaLogin';
 import { useContext } from 'react';
 
 function MenuLateral() {
@@ -18,7 +18,9 @@ function MenuLateral() {
                         <IonTitle>CONFIGURAÇÕES</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-                <IonContent className="ion-padding">CONFIGURAÇOES DA APLICAÇÃO</IonContent>
+                <IonContent className="ion-padding">
+                    <IonButton expand="block" href="/categorias">CATEGORIAS</IonButton>                    
+                </IonContent>
                 <IonButton color="danger" onClick={logoff}>SAIR</IonButton>
             </IonMenu>
         </>

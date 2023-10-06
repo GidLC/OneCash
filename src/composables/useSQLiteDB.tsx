@@ -16,10 +16,10 @@ const useSQLiteDB = () => {
 
       sqlite.current = new SQLiteConnection(CapacitorSQLite); // Criamos uma nova conexão SQLite
       const ret = await sqlite.current.checkConnectionsConsistency(); // Verificamos a consistência das conexões
-      const isConn = (await sqlite.current.isConnection("db_vite", false)).result; // Verificamos se a conexão "db_vite" existe
+      const isConn = (await sqlite.current.isConnection("db_onecash", false)).result; // Verificamos se a conexão "db_vite" existe
 
       if (ret.result && isConn) {
-        db.current = await sqlite.current.retrieveConnection("db_vite", false); // Se a conexão existir, recuperamos a referência
+        db.current = await sqlite.current.retrieveConnection("db_onecash", false); // Se a conexão existir, recuperamos a referência
       } else {
         db.current = await sqlite.current.createConnection(
           "db_onecash",
@@ -54,25 +54,91 @@ const useSQLiteDB = () => {
     }
   };
 
+
   /**
    * Aqui é onde você pode verificar e atualizar a estrutura da tabela
    */
   const initializeTables = async () => {
     performSQLAction(async (db: SQLiteDBConnection | undefined) => {
-      const queryCreateTable = `
+      const queryCreateTableBanco = `
+      CREATE TABLE IF NOT EXISTS banco(
+        "id_banco"	INTEGER NOT NULL,
+        "nome_banco"	TEXT NOT NULL,
+        "saldo_real_banco"	INTEGER,
+        "saldo_centavos_banco"	INTEGER,
+        PRIMARY KEY("id_banco" AUTOINCREMENT)
+      )`
+      await db?.execute(queryCreateTableBanco);
+
+      const queryCreateTableCategoriaDespesa = `
+      CREATE TABLE IF NOT EXISTS categoria_despesa(
+        "id_categoria_despesa"	INTEGER NOT NULL,
+        "nome_categoria_despesa"	TEXT NOT NULL,
+        "descricao_categoria_despesa"	TEXT,
+        "cor_categoria_despesa"	TEXT NOT NULL,
+        PRIMARY KEY("id_categoria_despesa" AUTOINCREMENT)
+      )`
+      await db?.execute(queryCreateTableCategoriaDespesa);
+
+      const queryCreateTableCategoriaReceita = `
+      CREATE TABLE IF NOT EXISTS categoria_receita(
+        "id_categoria_receita"	INTEGER NOT NULL,
+        "nome_categoria_receita"	TEXT NOT NULL,
+        "descricao_categoria_receita"	TEXT,
+        "cor_categoria_receita"	TEXT,
+        PRIMARY KEY("id_categoria_receita" AUTOINCREMENT)
+      )`
+      await db?.execute(queryCreateTableCategoriaReceita); 
+
+      const queryCreateTableDespesa = `
+      CREATE TABLE IF NOT EXISTS despesa(
+        "id_despesa"	INTEGER NOT NULL,
+        "descricao_despesa"	TEXT NOT NULL,
+        "valor_despesa"	REAL NOT NULL,
+        "origem_despesa"	INTEGER,
+        "categoria_despesa"	INTEGER,
+        "usuario_despesa"	INTEGER,
+        "status_despesa"	INTEGER NOT NULL,
+        "timestamp_despesa"	TEXT NOT NULL,
+        "dia_despesa"	INTEGER NOT NULL,
+        "mes_despesa"	INTEGER NOT NULL,
+        "ano_despesa"	INTEGER NOT NULL,
+        PRIMARY KEY("id_despesa" AUTOINCREMENT)
+      )`
+      await db?.execute(queryCreateTableDespesa);
+
+      const queryCreateTableReceita = `
+      CREATE TABLE IF NOT EXISTS receita(
+        "id_receita"	INTEGER NOT NULL,
+        "descricao_receita"	TEXT NOT NULL,
+        "valor_receita"	REAL NOT NULL,
+        "destino_receita"	INTEGER,
+        "usuario_receita"	INTEGER,
+        "status_receita"	INTEGER NOT NULL,
+        "timestamp_receita"	TEXT NOT NULL,
+        "dia_receita"	INTEGER NOT NULL,
+        "mes_receita"	INTEGER NOT NULL,
+        "ano_receita"	INTEGER NOT NULL,
+        "categoria_receita"	INTEGER,
+        PRIMARY KEY("id_receita" AUTOINCREMENT)
+      )`
+      await db?.execute(queryCreateTableReceita); 
+
+
+      const queryCreateTableUsuario = `
       CREATE TABLE IF NOT EXISTS usuario (
-      id INTEGER PRIMARY KEY NOT NULL,
+      id INTEGER NOT NULL,
       nome TEXT NOT NULL,
       email TEXT NOT NULL,
-      senha TEXT NOT NULL
+      senha TEXT,
+      PRIMARY KEY("id" AUTOINCREMENT)
       );
     `;
-      const respCT = await db?.execute(queryCreateTable); // Executamos a consulta SQL para criar a tabela (se não existir)
-      console.log(`res: ${JSON.stringify(respCT)}`); // Exibimos a resposta da criação da tabela
+      await db?.execute(queryCreateTableUsuario);
     });
   };
 
-  return { performSQLAction, initialized }; // Retornamos as funções e o estado para uso externo
+  return { performSQLAction, initialized };
 };
 
 export default useSQLiteDB;

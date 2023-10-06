@@ -20,11 +20,6 @@ function BarraInferior() {
                 <IonLabel>SAIDA</IonLabel>
             </IonTabButton>
 
-            <IonTabButton tab="casal" href="/casal">
-                <IonIcon aria-hidden="true" icon={peopleCircleOutline} />
-                <IonLabel>CASAL</IonLabel>
-            </IonTabButton>
-
         </IonTabBar>
     );
 }

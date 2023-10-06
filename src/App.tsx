@@ -27,12 +27,13 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import AppRoutes from './router/AppRoutes';
+import { AutenticacaoProvider } from './contexts/autenticaLogin';
 
 setupIonicReact();
 
 const App: React.FC = () => {
   return (
-    <AppRoutes />
+      <AppRoutes />
   )
 };
 
