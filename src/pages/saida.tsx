@@ -11,14 +11,18 @@ import {
   IonTabButton,
   IonIcon,
   IonFooter,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonText,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { SQLiteDBConnection } from "@capacitor-community/sqlite";
 import useSQLiteDB from "../composables/useSQLiteDB";
-import { arrowBackCircleOutline } from "ionicons/icons";
+import { analyticsOutline} from "ionicons/icons";
 import MenuLateral from "../components/MenuLateral/MenuLateral";
 import Header from "../components/HeaderHome/HeaderHome";
-import BotaoMais from "../components/BotaoMais/BotaoMais";
 import BarraInferior from "../components/BarraInferior/BarraInferior";
 
 type SQLItem = {
@@ -76,45 +80,23 @@ const Saida: React.FC = () => {
         <IonContent>
           {items?.map((item) => (
             <IonList>
-              <IonItemGroup>
-                <IonItem>
-                  <IonLabel>ID: {item.id_despesa}</IonLabel>
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>Descricao: {item.descricao_despesa}</IonLabel>
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>Valor: {item.valor_despesa}</IonLabel>
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>Destino: {item.destino_despesa}</IonLabel>
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>Usuário: {item.usuario_despesa}</IonLabel>
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>Status: {item.status_despesa}</IonLabel>
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>TimeStamp: {item.timestamp_despesa}</IonLabel>
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel>Categoria: {item.categoria_despesa}</IonLabel>
-                </IonItem>
-              </IonItemGroup>
-            </IonList>
+            <IonCard>
+              <IonCardHeader>
+                {/**Aqui ficará o icone da receita "ao lado da descrição" */}
+                <IonIcon icon={analyticsOutline} size="large"></IonIcon>
+                <IonCardTitle>Descrição: {item.descricao_despesa}</IonCardTitle>
+                <IonCardSubtitle>
+                  <IonText>Categoria: {item.categoria_despesa}</IonText>
+                  <IonText> | </IonText>
+                  <IonText>Banco: {item.destino_despesa}</IonText>
+                  <IonTitle>R${item.valor_despesa}</IonTitle>
+                </IonCardSubtitle>
+              </IonCardHeader>
+            </IonCard>
+          </IonList>
 
 
           ))}
-
-          <BotaoMais />
         </IonContent>
 
         <IonFooter>

@@ -18,9 +18,13 @@ function MenuLateral() {
                         <IonTitle>CONFIGURAÇÕES</IonTitle>
                     </IonToolbar>
                 </IonHeader>
+
                 <IonContent className="ion-padding">
-                    <IonButton expand="block" href="/categorias">CATEGORIAS</IonButton>                    
+                    <IonButton expand="block" href="/categorias">CATEGORIAS</IonButton>   
+                    <IonButton expand="block" href="/cadastroBanco">BANCOS</IonButton>   
+                    <IonButton expand="block" href="/exportarDados">EXPORTAR DADOS</IonButton>                                   
                 </IonContent>
+                
                 <IonButton color="danger" onClick={logoff}>SAIR</IonButton>
             </IonMenu>
         </>

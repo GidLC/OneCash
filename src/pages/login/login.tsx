@@ -22,6 +22,7 @@ type UsuarioEscolhido = {
 }
 
 const Login: React.FC = () => {
+
     const { performSQLAction, initialized } = useSQLiteDB();
 
     useEffect(() => {
@@ -38,7 +39,7 @@ const Login: React.FC = () => {
     const buscaUsuario = async () => {
         try {
             performSQLAction(async (db: SQLiteDBConnection | undefined) => {
-                const query = await db?.query(`SELECT * FROM usuario`);
+                const query:any = await db?.query(`SELECT * FROM usuario`);
                 setUsuarioBd(query?.values);
 
                 UsuarioEscolhido.map((usuario) => (
@@ -49,6 +50,10 @@ const Login: React.FC = () => {
             });
         } catch (error) {
             console.error((error as Error).message);
+        }
+
+        if (!initialized) {
+            return;
         }
     }
 

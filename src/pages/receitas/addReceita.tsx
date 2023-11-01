@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useState } from 'react';
-import { IonAlert, IonAvatar, IonButton, IonCheckbox, IonContent, IonFooter, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonSearchbar, IonToggle, } from '@ionic/react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { IonAlert, IonAvatar, IonButton, IonCheckbox, IonContent, IonFooter, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonSearchbar, IonSelect, IonSelectOption, IonToggle, } from '@ionic/react';
 import { checkmark } from 'ionicons/icons';
 import './addReceita.css'
 import Header from '../../components/Header/Header';
@@ -8,6 +8,17 @@ import BarraInferior from '../../components/BarraInferior/BarraInferior';
 import { SQLiteDBConnection } from 'react-sqlite-hook';
 import AuthContext from '../../contexts/autenticaLogin';
 import useSQLiteDB from '../../composables/useSQLiteDB';
+
+type SQLItemCategoria = {
+  id_categoria_receita: number,
+  nome_categoria_receita: string,
+  cor_categoria_receita: string
+}
+
+type SQLItemBanco = {
+  id_banco: number,
+  nome_banco: string
+}
 
 const AddReceita: React.FC = () => {
   const { performSQLAction, initialized } = useSQLiteDB();
@@ -18,8 +29,43 @@ const AddReceita: React.FC = () => {
   const [valor, setValor] = useState('');
   const [destino, setDestino] = useState('');
   //const [data, setData] = useState<Date>();
-  const [categoria, setCategoria] = useState('');
+  const [categoria, setCategoria] = useState<Number>();
   const [status, setStatus] = useState<Number>(0);
+  const [categoriasBD, setCategoriasBD] = useState<Array<SQLItemCategoria>>();
+  const [bancoBD, setBancoBD] = useState<Array<SQLItemBanco>>();
+
+  useEffect(() => {
+    carregaCategoria();
+    carregaBanco(); // Carrega os dados da base de dados quando o componente é montado ou quando o banco de dados é inicializado
+  }, [initialized]);
+
+  function carregaCategoria() {
+    try {
+      // Consulta a base de dados
+      performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+        const respSelect = await db?.query(`SELECT * FROM categoria_receita`);
+        setCategoriasBD(respSelect?.values);
+      });
+
+    } catch (error) {
+      alert((error as Error).message);
+      setCategoriasBD([]);
+    }
+  }
+
+  function carregaBanco() {
+    try {
+      // Consulta a base de dados
+      performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+        const respSelect = await db?.query(`SELECT * FROM banco`);
+        setBancoBD(respSelect?.values);
+      });
+
+    } catch (error) {
+      alert((error as Error).message);
+      setBancoBD([]);
+    }
+  }
 
   function defineStatus(e: any) {
     const status = e;
@@ -37,34 +83,29 @@ const AddReceita: React.FC = () => {
       const hoje = new Date();
       performSQLAction(
         async (db: SQLiteDBConnection | undefined) => {
-          if (status != null) {
-            await db?.query(`INSERT INTO receita (descricao_receita, valor_receita, destino_receita, usuario_receita, 
+          await db?.query(`INSERT INTO receita (descricao_receita, valor_receita, destino_receita, usuario_receita, 
             categoria_receita, status_receita, timestamp_receita, dia_receita, mes_receita, ano_receita) 
             values (?,?,?,?,?,?,?,?,?,?);`, [
-              descricao,
-              valor,
-              destino,
-              Auth?.usuario?.id,
-              5,
-              status,
-              Date.now(),
-              hoje.getDate(),
-              hoje.getMonth() + 1,
-              hoje.getFullYear()
-            ]);
-          } else {
-            alert("Por favor, defina o status antes de cadastrar a receita.");
-          }
+            descricao,
+            valor,
+            destino,
+            1,
+            categoria,
+            status,
+            Date.now(),
+            hoje.getDate(),
+            hoje.getMonth() + 1,
+            hoje.getFullYear()
+          ]);
         },
-
         async () => {
-            setDescricao("");
-            setValor("");
-            setDestino("");
-            setCategoria("");
-            alert("Receita Cadastrada");
+          setDescricao("");
+          setValor("");
+          setDestino("");
+          setCategoria(0);
+          alert("Receita Cadastrada");
         }
-      );
+      )
     } catch (error) {
       alert((error as Error).message);
     }
@@ -87,7 +128,31 @@ const AddReceita: React.FC = () => {
           </div>
 
           <div>
-            <IonInput label="Destino:" labelPlacement="stacked" placeholder="Destino" value={destino} onIonChange={e => setDestino(e.detail.value!)}></IonInput>
+            <IonList>
+              <IonItem>
+                <IonSelect aria-label="destino" placeholder="Destino" onIonChange={(e) => setDestino(e.detail.value!)}>
+                  {bancoBD?.map((item, index) => (
+
+                    <IonSelectOption value={item.id_banco} key={index}>{item.nome_banco}</IonSelectOption>
+
+                  ))}
+                </IonSelect>
+              </IonItem>
+            </IonList>
+          </div>
+
+          <div>
+            <IonList>
+              <IonItem>
+                <IonSelect aria-label="categoria" placeholder="Categoria" onIonChange={(e) => setCategoria(e.detail.value!)}>
+                  {categoriasBD?.map((item, index) => (
+
+                    <IonSelectOption value={item.id_categoria_receita} key={index}>{item.nome_categoria_receita}</IonSelectOption>
+
+                  ))}
+                </IonSelect>
+              </IonItem>
+            </IonList>
           </div>
 
           {/*<div>

@@ -12,6 +12,7 @@ import useSQLiteDB from '../../composables/useSQLiteDB';
 const AddDespesa: React.FC = () => {
   const { performSQLAction, initialized } = useSQLiteDB();
   const Auth = useContext(AuthContext);
+  const idUsuario = Auth?.usuario?.id;
   const modal = useRef<HTMLIonModalElement>(null);
 
   const [descricao, setDescricao] = useState('');
@@ -33,11 +34,11 @@ const AddDespesa: React.FC = () => {
   }
 
   const cadDespesa = async () => {
+    console.log(idUsuario)
     try {
       const hoje = new Date();
       performSQLAction(
         async (db: SQLiteDBConnection | undefined) => {
-          if (status != null) {
             await db?.query(`INSERT INTO despesa (descricao_despesa, valor_despesa, origem_despesa, usuario_despesa, 
             categoria_despesa, status_despesa, timestamp_despesa, dia_despesa, mes_despesa, ano_despesa) 
             values (?,?,?,?,?,?,?,?,?,?);`, [
@@ -52,9 +53,6 @@ const AddDespesa: React.FC = () => {
               hoje.getMonth() + 1,
               hoje.getFullYear()
             ]);
-          } else {
-            alert("Por favor, defina o status antes de cadastrar a despesa.");
-          }
         },
 
         async () => {

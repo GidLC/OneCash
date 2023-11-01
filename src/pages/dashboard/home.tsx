@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonPage, IonRow } from '@ionic/react';
+import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonPage, IonRow } from '@ionic/react';
 import './home.css';
 import BotaoMais from '../../components/BotaoMais/BotaoMais';
 import MenuLateral from '../../components/MenuLateral/MenuLateral';
@@ -16,13 +16,12 @@ type SQLItem = {
 }
 
 function Home() {
-    // Hook para o banco de dados SQLite
-    const { performSQLAction, initialized } = useSQLiteDB();
+  const { performSQLAction, initialized } = useSQLiteDB();
 
-    useEffect(() => {
-      carregandoReceitas();
-      carregandoDespesas();
-    }, [initialized]);
+  useEffect(() => {
+    carregandoReceitas();
+    carregandoDespesas();
+  }, [initialized]);
 
   const [itemsReceita, setItemsReceita] = useState<Array<SQLItem>>(); // Estado para rastrear os itens da base de dados
   const [itemsDespesa, setItemsDespesa] = useState<Array<SQLItem>>();
@@ -43,6 +42,10 @@ function Home() {
     } catch (error) {
       alert((error as Error).message);
       setItemsReceita([]);
+    }
+    
+    if (!initialized) {
+      return;
     }
   };
 
@@ -70,44 +73,93 @@ function Home() {
         </IonHeader>
 
         <IonContent>
-          <IonGrid>
-            <IonRow>
-              <IonCol>
-                <IonCard color="primary">
-                  <IonCardHeader>
-                    <IonCardTitle>SALDO:</IonCardTitle>
-                    <IonCardSubtitle>{`R$ ${saldo}`}</IonCardSubtitle>
-                  </IonCardHeader>
-                </IonCard>
-              </IonCol>
-            </IonRow>
-
-            <IonRow>
-              <IonCol>
-                <a href='/entrada'>
-                  <IonCard color="success">
-                    <IonCardHeader>
-                      <IonCardTitle>RECEITAS</IonCardTitle>
-                      <IonCardSubtitle>{`R$ ${receitas}`}</IonCardSubtitle>
+          <IonCard>
+            <IonGrid>
+              {/*<IonRow>
+                <IonCol>
+                  <IonCard color="primary">
+                    <IonCardHeader className='valoresHome'>
+                      <IonCardTitle>SALDO:</IonCardTitle>
+                      <IonCardSubtitle>{` R$ ${saldo || 0.00}`}</IonCardSubtitle>
                     </IonCardHeader>
                   </IonCard>
+                </IonCol>
+  </IonRow>*/}
 
-                </a>
-              </IonCol>
+              <IonRow>
+                <IonCol>
+                  <a href='/entrada'>
+                    <IonCard color="success">
+                      <IonCardHeader className='valoresHome'>
+                        <IonCardTitle>RECEITAS:</IonCardTitle>
+                        <IonCardSubtitle>{` R$ ${receitas || 0.00}`}</IonCardSubtitle>
+                      </IonCardHeader>
+                    </IonCard>
 
-              <IonCol>
-                <a href='/saida'>
-                  <IonCard color="danger">
+                  </a>
+                </IonCol>
+
+                <IonCol>
+                  <a href='/saida'>
+                    <IonCard color="danger">
+                      <IonCardHeader className='valoresHome'>
+                        <IonCardTitle>DESPESAS:</IonCardTitle>
+                        <IonCardSubtitle>{` R$ ${despesas || 0.00}`}</IonCardSubtitle>
+                      </IonCardHeader>
+                    </IonCard>
+                  </a>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </IonCard>
+
+
+          <IonCard>
+            <IonGrid>
+              <IonRow>
+                <IonCol>
+                  <IonCard color="light">
                     <IonCardHeader>
-                      <IonCardTitle>DESPESAS</IonCardTitle>
-                      <IonCardSubtitle>{`R$ ${despesas}`}</IonCardSubtitle>
+                      <IonCardHeader>Receitas Ente 1</IonCardHeader>
                     </IonCardHeader>
                   </IonCard>
-                </a>
-              </IonCol>
+                </IonCol>
+
+                <IonCol>
+                <IonCard color="light">
+                    <IonCardHeader>
+                      <IonCardHeader>Receitas Ente 2</IonCardHeader>
+                    </IonCardHeader>
+                  </IonCard>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </IonCard>
+
+          <IonCard>
+            <IonRow>
+            <IonCol>
+                <IonCard color="light">
+                    <IonCardHeader>
+                      <IonCardHeader>DESPESAS POR CATEGORIA</IonCardHeader>
+                    </IonCardHeader>
+                  </IonCard>
+                </IonCol>
             </IonRow>
-          </IonGrid>
-          <BotaoMais lado="center"/>
+          </IonCard>
+
+          <IonCard>
+            <IonRow>
+            <IonCol>
+                <IonCard color="light">
+                    <IonCardHeader>
+                      <IonCardHeader>GRÁFICOS</IonCardHeader>
+                    </IonCardHeader>
+                  </IonCard>
+                </IonCol>
+            </IonRow>
+          </IonCard>
+          <BotaoMais lado="center" />
         </IonContent>
 
         <IonFooter>

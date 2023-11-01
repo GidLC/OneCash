@@ -1,5 +1,5 @@
 import { IonIcon, IonLabel, IonTabBar, IonTabButton } from '@ionic/react';
-import { arrowDownOutline, arrowUpOutline, homeOutline, peopleCircleOutline } from 'ionicons/icons';
+import { arrowDownOutline, arrowUpOutline, cardOutline, homeOutline, peopleCircleOutline } from 'ionicons/icons';
 
 function BarraInferior() {
     return (
@@ -20,6 +20,10 @@ function BarraInferior() {
                 <IonLabel>SAIDA</IonLabel>
             </IonTabButton>
 
+            <IonTabButton tab="banco" href="/readBanco">
+                <IonIcon aria-hidden="true" icon={cardOutline} />
+                <IonLabel>BANCO</IonLabel>
+            </IonTabButton>
         </IonTabBar>
     );
 }

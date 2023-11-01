@@ -16,9 +16,6 @@ const Header: React.FC<HeaderProps> = ({ nome }) => {
         <IonGrid>
             <IonRow>
               <IonCol size="auto">
-                  <IonTabButton href="/home">
-                    <IonIcon aria-hidden="false" icon={arrowBackCircleOutline} size="large"/>
-                  </IonTabButton>
               </IonCol>
               <IonCol>
                   <IonTitle size="large">{nome}</IonTitle>

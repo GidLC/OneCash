@@ -18,9 +18,9 @@ import useSQLiteDB from "../../composables/useSQLiteDB";
 import { arrowBackCircleOutline } from "ionicons/icons";
 
 type SQLItem = {
-    id: number,
-    nome: string,
-    cor: string
+    id_categoria_receita: number,
+    nome_categoria_receita: string,
+    cor_categoria_receita: string
 };
 
 const TesteCategoria: React.FC = () => {
@@ -62,7 +62,7 @@ const TesteCategoria: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTabButton href="/categoria">
+                    <IonTabButton href="/categorias">
                         <IonIcon aria-hidden="false" icon={arrowBackCircleOutline} size="size" />
                     </IonTabButton>
                     <IonTitle>CADASTRO DE CATEGORIAS</IonTitle>
@@ -79,15 +79,15 @@ const TesteCategoria: React.FC = () => {
                     <IonList>
                         <IonItemGroup>
                             <IonItemDivider>
-                                <IonLabel>{item.id}</IonLabel>
+                                <IonLabel>{item.id_categoria_receita}</IonLabel>
                             </IonItemDivider>
 
                             <IonItem>
-                                <IonLabel>Nome: {item.nome}</IonLabel>
+                                <IonLabel>Nome: {item.nome_categoria_receita}</IonLabel>
                             </IonItem>
 
                             <IonItem>
-                                <IonLabel>Cor: {item.cor}</IonLabel>
+                                <IonLabel>Cor: {item.cor_categoria_receita}</IonLabel>
                             </IonItem>
                         </IonItemGroup>
                     </IonList>
