@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { IonAlert, IonAvatar, IonButton, IonCheckbox, IonContent, IonFooter, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonSearchbar, IonSelect, IonSelectOption, IonToggle, } from '@ionic/react';
-import { checkmark } from 'ionicons/icons';
+import React, { useEffect, useState } from 'react';
+import { IonButton, IonContent, IonDatetime, IonFooter, IonIcon, IonInput, IonItem, IonList, IonModal, IonPage, IonSelect, IonSelectOption, IonToggle, } from '@ionic/react';
+import { calendarOutline, checkmark } from 'ionicons/icons';
 import './addReceita.css'
 import Header from '../../components/Header/Header';
 import MenuLateral from '../../components/MenuLateral/MenuLateral';
 import BarraInferior from '../../components/BarraInferior/BarraInferior';
 import { SQLiteDBConnection } from 'react-sqlite-hook';
-import AuthContext from '../../contexts/autenticaLogin';
 import useSQLiteDB from '../../composables/useSQLiteDB';
 
 type SQLItemCategoria = {
@@ -15,29 +14,57 @@ type SQLItemCategoria = {
   cor_categoria_receita: string
 }
 
-type SQLItemBanco = {
-  id_banco: number,
-  nome_banco: string
+type SQLItemUsuario = {
+  id: number,
+  nome: string,
+}
+
+type OBJData = {
+  ano: Number,
+  mes: Number,
+  dia: Number,
+  hora: Number,
+  minuto: Number,
+  segundo: Number
 }
 
 const AddReceita: React.FC = () => {
+  const hoje = Date.now()
+
   const { performSQLAction, initialized } = useSQLiteDB();
-  const Auth = useContext(AuthContext);
-  const modal = useRef<HTMLIonModalElement>(null);
 
   const [descricao, setDescricao] = useState('');
   const [valor, setValor] = useState('');
-  const [destino, setDestino] = useState('');
-  //const [data, setData] = useState<Date>();
+  const [usuariosBD, setUsuariosBD] = useState<Array<SQLItemUsuario>>();
+  const [usuario, setUsuario] = useState<Number>();
+  const [data, setData] = useState<OBJData>();
+  const [categoriasBD, setCategoriasBD] = useState<Array<SQLItemCategoria>>();
   const [categoria, setCategoria] = useState<Number>();
   const [status, setStatus] = useState<Number>(0);
-  const [categoriasBD, setCategoriasBD] = useState<Array<SQLItemCategoria>>();
-  const [bancoBD, setBancoBD] = useState<Array<SQLItemBanco>>();
+  const [showModal, setShowModal] = useState(false);
+  const [dataSelecionada, setDataSelecionada] = useState('');
 
   useEffect(() => {
     carregaCategoria();
-    carregaBanco(); // Carrega os dados da base de dados quando o componente é montado ou quando o banco de dados é inicializado
+    carregaUsuario();
   }, [initialized]);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+
+  function carregaUsuario() {
+    try {
+      performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+        const respSelect = await db?.query(`SELECT * FROM usuario`);
+        setUsuariosBD(respSelect?.values);
+      });
+    } catch (error) {
+      alert((error as Error).message);
+      setCategoriasBD([]);
+    }
+  }
 
   function carregaCategoria() {
     try {
@@ -53,7 +80,7 @@ const AddReceita: React.FC = () => {
     }
   }
 
-  function carregaBanco() {
+  /*function carregaBanco() {
     try {
       // Consulta a base de dados
       performSQLAction(async (db: SQLiteDBConnection | undefined) => {
@@ -65,7 +92,7 @@ const AddReceita: React.FC = () => {
       alert((error as Error).message);
       setBancoBD([]);
     }
-  }
+  }*/
 
   function defineStatus(e: any) {
     const status = e;
@@ -78,30 +105,27 @@ const AddReceita: React.FC = () => {
     }
   }
 
-  const cadReceita = async () => {
+  const addReceita = async () => {
     try {
-      const hoje = new Date();
       performSQLAction(
         async (db: SQLiteDBConnection | undefined) => {
-          await db?.query(`INSERT INTO receita (descricao_receita, valor_receita, destino_receita, usuario_receita, 
+          await db?.query(`INSERT INTO receita (descricao_receita, valor_receita, usuario_receita, 
             categoria_receita, status_receita, timestamp_receita, dia_receita, mes_receita, ano_receita) 
-            values (?,?,?,?,?,?,?,?,?,?);`, [
+            values (?,?,?,?,?,?,?,?,?);`, [
             descricao,
             valor,
-            destino,
-            1,
+            usuario,
             categoria,
             status,
             Date.now(),
-            hoje.getDate(),
-            hoje.getMonth() + 1,
-            hoje.getFullYear()
+            data?.dia,
+            data?.mes,
+            data?.ano
           ]);
         },
         async () => {
           setDescricao("");
           setValor("");
-          setDestino("");
           setCategoria(0);
           alert("Receita Cadastrada");
         }
@@ -110,6 +134,31 @@ const AddReceita: React.FC = () => {
       alert((error as Error).message);
     }
   };
+
+  function separaData(e: any) {
+    const [dataPart, horaPart] = e.split("T");
+    const [ano, mes, dia] = dataPart.split("-");
+    const [hora, minuto, segundo] = horaPart.split(":");
+
+    const objData = {
+      ano: parseInt(ano),
+      mes: parseInt(mes),
+      dia,
+      hora: parseInt(hora),
+      minuto: parseInt(minuto),
+      segundo: parseInt(segundo)
+    }
+
+    if(dataSelecionada === "ONTEM"){
+      objData.dia = parseInt(dia) - 1
+    }else{
+      objData.dia = parseInt(dia)
+    }
+
+    setData(objData)
+    console.log(objData)
+  }
+
 
   return (
     <>
@@ -127,7 +176,7 @@ const AddReceita: React.FC = () => {
               value={valor} onIonChange={(e) => setValor(e.detail.value!)}></IonInput>
           </div>
 
-          <div>
+          {/*<div>
             <IonList>
               <IonItem>
                 <IonSelect aria-label="destino" placeholder="Destino" onIonChange={(e) => setDestino(e.detail.value!)}>
@@ -139,6 +188,17 @@ const AddReceita: React.FC = () => {
                 </IonSelect>
               </IonItem>
             </IonList>
+                  </div>*/}
+
+          <div>
+            <IonItem>
+              <IonSelect aria-label="usuario" placeholder="Usuario" onIonChange={(e) => setUsuario(e.detail.value!)}>
+                {usuariosBD?.map((item, index) => (
+                  <IonSelectOption value={item.id} key={index}>{item.nome}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonItem>
           </div>
 
           <div>
@@ -177,18 +237,46 @@ const AddReceita: React.FC = () => {
 
           {/*<div>
               <IonInput label="Observação:" labelPlacement="stacked" placeholder="****" value={observacao} onIonChange={e => setObservacao(e.detail.value!)}></IonInput>
-            </div>
-
-            <div className='botaoData'>
-              <IonIcon icon={calendarOutline} className='calendario'></IonIcon>
-              <IonDatetimeButton datetime="datetime" onIonChange={e => setData(e.detail.value!)}></IonDatetimeButton>
-              <IonModal keepContentsMounted={true}>
-                <IonDatetime id="datetime" presentation='date' value={data}></IonDatetime>
-              </IonModal>
             </div>*/}
 
+          <div className='botaoData'>
+            <IonIcon icon={calendarOutline} className='calendario' size="large"></IonIcon>
+
+            <IonButton
+              color={dataSelecionada === "HOJE" ? "success" : "primary"}
+              onClick={() => {
+                //separaData(hoje.toString)
+                setDataSelecionada("HOJE")
+              }}>HOJE</IonButton>
+
+            <IonButton
+              onClick={() => {
+                separaData(hoje.toString)
+                setDataSelecionada("ONTEM")
+              }}
+              color={dataSelecionada === "ONTEM" ? "success" : "primary"}
+            >ONTEM</IonButton>
+
+            <IonButton onClick={openModal}>OUTROS</IonButton>
+          </div>
+
+          <IonModal isOpen={showModal}>
+            <IonDatetime
+              id="datetime"
+              presentation="date"
+              showDefaultButtons
+              doneText='OK'
+              cancelText='CANCELAR'
+              onIonChange={(e) => {
+                setShowModal(false);
+                separaData(e.detail.value);
+                setDataSelecionada("OUTROS")
+              }}
+            ></IonDatetime>
+          </IonModal>
+
           <div>
-            <IonButton color='success' onClick={cadReceita}>
+            <IonButton color='success' onClick={addReceita}>
               <IonIcon icon={checkmark}></IonIcon>
             </IonButton>
           </div>

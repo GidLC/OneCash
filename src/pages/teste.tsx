@@ -156,6 +156,7 @@ const Teste: React.FC = () => {
           <IonTitle>REACT SQLITE</IonTitle>
         </IonToolbar>
       </IonHeader>
+      
       <IonContent fullscreen className="ion-padding">
         {editItem ? ( // Se um item estiver sendo editado
           <IonItem>

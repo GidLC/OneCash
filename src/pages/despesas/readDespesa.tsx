@@ -19,11 +19,12 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { SQLiteDBConnection } from "@capacitor-community/sqlite";
-import useSQLiteDB from "../composables/useSQLiteDB";
+import useSQLiteDB from "../../composables/useSQLiteDB";
 import { analyticsOutline} from "ionicons/icons";
-import MenuLateral from "../components/MenuLateral/MenuLateral";
-import Header from "../components/HeaderHome/HeaderHome";
-import BarraInferior from "../components/BarraInferior/BarraInferior";
+import MenuLateral from "../../components/MenuLateral/MenuLateral";
+import Header from "../../components/HeaderHome/HeaderHome";
+import BarraInferior from "../../components/BarraInferior/BarraInferior";
+import './readDespesa.css'
 
 type SQLItem = {
   id_despesa: number;

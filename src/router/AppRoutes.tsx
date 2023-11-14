@@ -2,20 +2,20 @@ import React from "react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router";
 import Home from "../pages/dashboard/home";
-import Entrada from "../pages/entrada";
-import Saida from "../pages/saida";
+import Entrada from "../pages/receitas/readReceita";
+import Saida from "../pages/despesas/readDespesa";
 import Login from "../pages/login/login";
 import AddDespesa from "../pages/despesas/addDespesa";
 import AddReceita from "../pages/receitas/addReceita";
 import Cadastro from "../pages/cadastro_usuario/cadastro_usuario";
 import TesteCadastro from "../pages/cadastro_usuario/testeCadastro";
-import AddCategoria from "../pages/categoria_receita/addCategoria";
+import AddCategoria from "../pages/categorias/addCategoria";
 import CadastroParceiro from "../pages/cadastro_usuario/cadastroParceiro";
-import TesteCategoria from "../pages/categoria_receita/teste_categoria";
 import { AutenticacaoProvider } from "../contexts/autenticaLogin";
 import CadastroBanco from "../pages/cadastro_banco/cadastro_banco";
-import TesteBanco from "../pages/cadastro_banco/teste_cadastro_banco";
 import ReadBanco from "../pages/banco/readBanco/readBanco";
+import Teste from "../pages/teste";
+import UpdateReceita from "../pages/receitas/updateReceita";
 
 const AppRoutes: React.FC = () => {
 
@@ -75,12 +75,16 @@ const AppRoutes: React.FC = () => {
           <AddCategoria />
         </Route>
 
-        <Route path="/testeCategoria">
-          <TesteCategoria />
-        </Route>
-
         <Route path="/readBanco">
           <ReadBanco />
+        </Route>
+
+        <Route path="/updateReceita">
+          <UpdateReceita/>
+        </Route>
+
+        <Route path="/teste">
+          <Teste/>
         </Route>
 
         <Route exact path="/">

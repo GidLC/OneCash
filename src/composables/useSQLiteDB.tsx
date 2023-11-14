@@ -50,7 +50,7 @@ const useSQLiteDB = () => {
       try {
         (await db.current?.isDBOpen())?.result && (await db.current?.close()); // Verificamos se o banco de dados está aberto e, se sim, o fechamos
         cleanup && (await cleanup()); // Se houver uma função de limpeza fornecida, executamos
-      } catch {}
+      } catch { }
     }
   };
 
@@ -88,7 +88,7 @@ const useSQLiteDB = () => {
         "cor_categoria_receita"	TEXT,
         PRIMARY KEY("id_categoria_receita" AUTOINCREMENT)
       )`
-      await db?.execute(queryCreateTableCategoriaReceita); 
+      await db?.execute(queryCreateTableCategoriaReceita);
 
       const queryCreateTableDespesa = `
       CREATE TABLE IF NOT EXISTS despesa(
@@ -122,7 +122,7 @@ const useSQLiteDB = () => {
         "categoria_receita"	INTEGER,
         PRIMARY KEY("id_receita" AUTOINCREMENT)
       )`
-      await db?.execute(queryCreateTableReceita); 
+      await db?.execute(queryCreateTableReceita);
 
 
       const queryCreateTableUsuario = `
@@ -135,6 +135,16 @@ const useSQLiteDB = () => {
       );
     `;
       await db?.execute(queryCreateTableUsuario);
+
+      const queryCreateTableCor = `
+      CREATE TABLE IF NOT EXISTS "cor" (
+        "id_cor"	INTEGER NOT NULL,
+        "nome_cor"	TEXT NOT NULL,
+        "codigo_cor"	TEXT NOT NULL,
+        PRIMARY KEY("id_cor" AUTOINCREMENT)
+      )
+    `;
+      await db?.execute(queryCreateTableCor);
     });
   };
 

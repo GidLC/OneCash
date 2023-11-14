@@ -25,7 +25,7 @@ const Login: React.FC = () => {
 
     const { performSQLAction, initialized } = useSQLiteDB();
 
-    useEffect(() => {
+    useEffect(() => { 
         buscaUsuario();
     }, [initialized]);
 
@@ -100,6 +100,7 @@ const Login: React.FC = () => {
                             placeholder="Selecione o Usuário"
                             okText='SELECIONAR'
                             cancelText='VOLTAR'>
+                                
                             {usuarioBd?.map((usuario) => (
                                 <IonSelectOption key={usuario.id} value={usuario}>
                                     {usuario.nome}

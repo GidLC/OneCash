@@ -13,26 +13,30 @@ type SQLItem = {
   receitas: number;
   despesas: number;
   saldo: number;
+  receitasEnte1: number,
+  receitasEnte2: number
 }
 
 function Home() {
   const { performSQLAction, initialized } = useSQLiteDB();
 
   useEffect(() => {
-    carregandoReceitas();
-    carregandoDespesas();
+    loadData(); 
   }, [initialized]);
 
   const [itemsReceita, setItemsReceita] = useState<Array<SQLItem>>(); // Estado para rastrear os itens da base de dados
   const [itemsDespesa, setItemsDespesa] = useState<Array<SQLItem>>();
   const receitas: any = itemsReceita?.[0]?.['receitas'];
   const despesas: any = itemsDespesa?.[0]?.['despesas'];
-  const saldo = receitas - despesas;
+  const [itemsReceitaEnte1, setItemsReceitasEnte1] = useState<Array<SQLItem>>()
+  const [itemsReceitaEnte2, setItemsReceitasEnte2] = useState<Array<SQLItem>>()
+  const receitasEnte1: any = itemsReceitaEnte1?.[0]?.['receitas'];
+  const receitasEnte2: any = itemsReceitaEnte2?.[0]?.['receitas'];
 
   /**
    * Realiza uma consulta na base de dados para carregar os itens.
    */
-  const carregandoReceitas = async () => {
+  const loadData = async () => {
     try {
       performSQLAction(async (db: SQLiteDBConnection | undefined) => {
         const respSelect = await db?.query(`SELECT sum(valor_receita) as receitas FROM receita WHERE status_receita = 1`);
@@ -43,13 +47,7 @@ function Home() {
       alert((error as Error).message);
       setItemsReceita([]);
     }
-    
-    if (!initialized) {
-      return;
-    }
-  };
 
-  const carregandoDespesas = async () => {
     try {
       performSQLAction(async (db: SQLiteDBConnection | undefined) => {
         const respSelect = await db?.query(`SELECT sum(valor_despesa) as despesas FROM despesa WHERE status_despesa = 1`);
@@ -60,8 +58,31 @@ function Home() {
       alert((error as Error).message);
       setItemsDespesa([]);
     }
+
+    try {
+      performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+        const respSelect = await db?.query(`SELECT sum(valor_receita) as receitas FROM receita WHERE status_receita = 1 AND usuario_receita = 1`);
+        setItemsReceitasEnte1(respSelect?.values);
+      });
+    } catch (error) {
+      alert((error as Error).message);
+      setItemsReceitasEnte1([]);
+    }
+
+    try {
+      performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+        const respSelect = await db?.query(`SELECT sum(valor_receita) as receitas FROM receita WHERE status_receita = 1 AND usuario_receita = 2`);
+        setItemsReceitasEnte2(respSelect?.values);
+      });
+    } catch (error) {
+      alert((error as Error).message);
+      setItemsReceitasEnte2([]);
+    }
+
+    if (!initialized) {
+      return;
+    }
   };
-  console.log(`Soma Receitas:`, itemsReceita);
 
 
   return (
@@ -92,7 +113,7 @@ function Home() {
                     <IonCard color="success">
                       <IonCardHeader className='valoresHome'>
                         <IonCardTitle>RECEITAS:</IonCardTitle>
-                        <IonCardSubtitle>{` R$ ${receitas || 0.00}`}</IonCardSubtitle>
+                        <IonCardTitle>{` R$ ${receitas || 0.00}`}</IonCardTitle>
                       </IonCardHeader>
                     </IonCard>
 
@@ -104,7 +125,7 @@ function Home() {
                     <IonCard color="danger">
                       <IonCardHeader className='valoresHome'>
                         <IonCardTitle>DESPESAS:</IonCardTitle>
-                        <IonCardSubtitle>{` R$ ${despesas || 0.00}`}</IonCardSubtitle>
+                        <IonCardTitle>{` R$ ${despesas || 0.00}`}</IonCardTitle>
                       </IonCardHeader>
                     </IonCard>
                   </a>
@@ -120,15 +141,17 @@ function Home() {
                 <IonCol>
                   <IonCard color="light">
                     <IonCardHeader>
-                      <IonCardHeader>Receitas Ente 1</IonCardHeader>
+                      <IonCardHeader>Receitas Ente 1:</IonCardHeader>
+                      <IonCardSubtitle>{`R$ ${receitasEnte1 || 0.00}`}</IonCardSubtitle>
                     </IonCardHeader>
                   </IonCard>
                 </IonCol>
 
                 <IonCol>
-                <IonCard color="light">
+                  <IonCard color="light">
                     <IonCardHeader>
                       <IonCardHeader>Receitas Ente 2</IonCardHeader>
+                      <IonCardSubtitle>{`R$ ${receitasEnte2 || 0.00}`}</IonCardSubtitle>
                     </IonCardHeader>
                   </IonCard>
                 </IonCol>
@@ -138,25 +161,25 @@ function Home() {
 
           <IonCard>
             <IonRow>
-            <IonCol>
+              <IonCol>
                 <IonCard color="light">
-                    <IonCardHeader>
-                      <IonCardHeader>DESPESAS POR CATEGORIA</IonCardHeader>
-                    </IonCardHeader>
-                  </IonCard>
-                </IonCol>
+                  <IonCardHeader>
+                    <IonCardHeader>DESPESAS POR CATEGORIA</IonCardHeader>
+                  </IonCardHeader>
+                </IonCard>
+              </IonCol>
             </IonRow>
           </IonCard>
 
           <IonCard>
             <IonRow>
-            <IonCol>
+              <IonCol>
                 <IonCard color="light">
-                    <IonCardHeader>
-                      <IonCardHeader>GRÁFICOS</IonCardHeader>
-                    </IonCardHeader>
-                  </IonCard>
-                </IonCol>
+                  <IonCardHeader>
+                    <IonCardHeader>GRÁFICOS</IonCardHeader>
+                  </IonCardHeader>
+                </IonCard>
+              </IonCol>
             </IonRow>
           </IonCard>
           <BotaoMais lado="center" />

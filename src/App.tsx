@@ -2,7 +2,7 @@ import {
   setupIonicReact
 } from '@ionic/react';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export let sqlite: any;
 
@@ -27,14 +27,18 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import AppRoutes from './router/AppRoutes';
-import { AutenticacaoProvider } from './contexts/autenticaLogin';
+import { SQLiteDBConnection } from 'react-sqlite-hook';
 
 setupIonicReact();
 
 const App: React.FC = () => {
   return (
-      <AppRoutes />
+    <AppRoutes />
   )
 };
 
 export default App;
+
+function performSQLAction(arg0: (db: SQLiteDBConnection | undefined) => Promise<void>, arg1: () => Promise<void>) {
+  throw new Error('Function not implemented.');
+}
