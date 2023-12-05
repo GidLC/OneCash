@@ -4,19 +4,21 @@ import { Redirect, Route } from "react-router";
 import Home from "./pages/dashboard/home";
 import Entrada from "./pages/receitas/readReceita";
 import Saida from "./pages/despesas/readDespesa";
-import Login from "./pages/login/login";
+import Login from "./pages/autenticacao/login";
 import AddDespesa from "./pages/despesas/addDespesa";
 import AddReceita from "./pages/receitas/addReceita";
-import Cadastro from "./pages/usuario/cadastroUsuario";
+import Cadastro from "./pages/autenticacao/cadastroUsuario";
 import AddCategoria from "./pages/categorias/addCategoria";
-import CadastroParceiro from "./pages/usuario/cadastroParceiro";
+import CadastroParceiro from "./pages/teste/cadastroParceiro";
 import { AutenticacaoProvider } from "./data/contexts/autenticaLogin";
 import CadastroBanco from "./pages/banco/cadastro_banco";
 import ReadBanco from "./pages/banco/readBanco";
 import UpdateReceita from "./pages/receitas/updateReceita";
-import TesteCadastro from "./pages/usuario/testeCadastro";
+import TesteCadastro from "./pages/teste/testeCadastro";
 
 const AppRoutes: React.FC = () => {
+
+  //As rotas do front precisarão ser protegidas
 
   /*const Private: React.FC<any> = ({ children }) => {
     const { autenticado } = useContext(AuthContext) ?? {};
@@ -36,10 +38,6 @@ const AppRoutes: React.FC = () => {
 
         <Route path="/cadastro">
           <Cadastro />
-        </Route>
-        
-        <Route path="/testeUsuario">
-          <TesteCadastro/>
         </Route>
 
         <Route path="/cadastroParceiro">

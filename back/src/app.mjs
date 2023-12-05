@@ -1,8 +1,8 @@
 // app.js
 import { app } from './config.mjs';
-import usuarioRoutes from './routes/usuarioRoutes.mjs'
+import router from './routes/authRoutes.mjs';
 
-app.use('/api/usuario', usuarioRoutes);
+app.use('/api/auth', router) //autenticação (login, vinculação e cadastro)
 
 const PORT = process.env.PORT || 3000;
 
