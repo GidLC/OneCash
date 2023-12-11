@@ -1,27 +1,20 @@
-import { IonContent, IonHeader, IonPage, IonToolbar, IonButton, IonImg, IonTitle, IonRow, IonFooter, IonGrid, IonCol, IonSelect, IonList, IonItem, IonSelectOption, IonInput } from '@ionic/react';
-import React, {useState } from 'react';
+import { IonContent, IonHeader, IonPage, IonToolbar, IonButton, IonImg, IonTitle, IonRow, IonFooter, IonGrid, IonCol } from '@ionic/react';
+import React, { useContext, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import './login.css';
 import '../../ui/theme/variables.css'
 import InputTexto from '../../ui/components/inputs/InputTexto/InputTexto';
-import api from '../../data/services/auth/api';
+import api from '../../data/services/api/auth/apiAuth';
+import AuthContext from '../../data/contexts/autenticaLogin';
 
-//Será necessário armazenar um token localmente para que haja uma autenticação do usuário
-//Provavelmente utilizarei o SQLite para armazenar o Token ou localStorage
+//implementar o useContext
 
 const platform = Capacitor.getPlatform();
 
-
-type propsUsuario = {
-    id: string,
-    nome: string,
-    email: string,
-    senha: string
-}
-
 const Login: React.FC = () => {
 
-    const [usuario, setUsuario] = useState(Array<propsUsuario>);
+    const [usuario, setUsuario] = useState({});
+    const Auth = useContext(AuthContext)
 
     const eventoChange = (chave: string, valor: string) => {
         setUsuario({
@@ -32,11 +25,18 @@ const Login: React.FC = () => {
 
     const eventoSubmit = async (e: any) => {
         e.preventDefault();
-        const resultado = await api.autenticaLogin(usuario)
-        console.log(resultado)
+        const usuarioLogin = await api.autenticaLogin(usuario)
+        if (usuarioLogin) {
+            try {
+                Auth?.login({"id": usuarioLogin.resultado.id_usuario,
+                            "nome": usuarioLogin.resultado.nome_usuario,
+                            "cod_casal": usuarioLogin.resultado.cod_casal});
+                console.log("login")
+            } catch (error) {
+                console.error((error as Error).message);
+            }
+        }
     }
-
-
 
 
     return (
@@ -82,3 +82,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+

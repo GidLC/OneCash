@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { arrowBackCircleOutline } from "ionicons/icons";
-import api from '../../data/services/auth/api'
+import api from '../../data/services/api/auth/apiAuth'
 
 type propsUsuario = {
     id_usuario: string,

@@ -5,14 +5,15 @@ const AuthContext = createContext<AutenticaProps | undefined>(undefined);
 
 interface UsuarioProps {
     id: number,
-    email: string,
     nome: string,
+    cod_casal: string
 }
 
 interface AutenticaProps {
-    usuario: UsuarioProps | null;
-    login: (id: any, nome: any, senha: any) => void;
+    usuario: {};
+    login: ({}: UsuarioProps) => void;
     logout: () => void;
+    autenticado: any;
 }
 
 interface AutenticacaoProviderProps {
@@ -20,16 +21,22 @@ interface AutenticacaoProviderProps {
 }
 
 export const AutenticacaoProvider: React.FC<AutenticacaoProviderProps> = ({ children }) => {
-    const [usuario, setUsuario] = useState<UsuarioProps | null>(null);
+    const [usuario, setUsuario] = useState({});
+    const [autenticado, setAutenticado] = useState();
     const navegador = useHistory();
 
     const login = (userData: UsuarioProps) => {
-        setUsuario(userData);
+        setUsuario({
+            "id": userData.id,
+            "nome": userData.nome,
+            "cod_casal": userData.cod_casal
+        });
+        setAutenticado(1)
         navegador.push("/home")
     };
 
     const logout = () => {
-        setUsuario(null);
+        setUsuario({});
         navegador.push("/login");
     };  
 
@@ -38,7 +45,8 @@ export const AutenticacaoProvider: React.FC<AutenticacaoProviderProps> = ({ chil
         value={{
                 usuario,
                 login,
-                logout }}>
+                logout,
+                autenticado }}>
             {children}
         </AuthContext.Provider>
     );

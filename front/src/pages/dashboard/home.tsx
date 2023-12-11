@@ -4,7 +4,8 @@ import BotaoMais from '../../ui/components/botoes/BotaoMais/BotaoMais';
 import MenuLateral from '../../ui/components/MenuLateral/MenuLateral';
 import BarraInferior from '../../ui/partials/BarraInferior/BarraInferior';
 import HeaderHome from '../../ui/partials/HeaderHome/HeaderHome';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import AuthContext from '../../data/contexts/autenticaLogin';
 
 
 type SQLItem = {
@@ -16,9 +17,11 @@ type SQLItem = {
 }
 
 function Home() {
+  const Auth = useContext(AuthContext)
+
   useEffect(() => {
     loadData(); 
-  }, /*[Estado para verificar se o banco de dados está inicializad]*/);
+  }, []);
 
   const [itemsReceita, setItemsReceita] = useState<Array<SQLItem>>(); // Estado para rastrear os itens da base de dados
   const [itemsDespesa, setItemsDespesa] = useState<Array<SQLItem>>();
@@ -40,6 +43,8 @@ function Home() {
     //SELECT das receitas do ente 1 do casal
 
     //SELECT das receitas do ente 2 do casal 
+
+    console.log(Auth?.usuario.nome)
   };
 
 
@@ -99,7 +104,7 @@ function Home() {
                 <IonCol>
                   <IonCard color="light">
                     <IonCardHeader>
-                      <IonCardHeader>Receitas Ente 1:</IonCardHeader>
+                      <IonCardHeader>Receitas {Auth?.usuario.nome}:</IonCardHeader>
                       <IonCardSubtitle>{`R$ ${receitasEnte1 || 0.00}`}</IonCardSubtitle>
                     </IonCardHeader>
                   </IonCard>

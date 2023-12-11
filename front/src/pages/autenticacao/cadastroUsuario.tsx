@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonIco
 import { arrowBackCircleOutline } from 'ionicons/icons';
 import './cadastroUsuario.css';
 import InputTexto from '../../ui/components/inputs/InputTexto/InputTexto';
-import api from '../../data/services/auth/api';
+import apiAuth from '../../data/services/api/auth/apiAuth';
 
 //Será necessário fazer autenticação via e-mail para o usuário (exemplo sistema de cadastro feito na matéria do Henrique)
 // Para fazer a autenticação é necessário criar uma tabela com usuários "provisórios"
@@ -53,7 +53,7 @@ const Cadastro: React.FC = () => {
         alert(`As senhas não conferem`)
       } else {
         try {
-          await api.addUsuario(usuario)
+          await apiAuth.addUsuario(usuario)
           alert(`Usuário Enviado para a API`)
         } catch (error: any) {
           console.error(`Erro ao cadastrar usuario`, error.message)
@@ -63,7 +63,7 @@ const Cadastro: React.FC = () => {
     } else {
       if (parcEncontrado) {
         try {
-          await api.vinculaCadastro(usuario)
+          await apiAuth.vinculaCadastro(usuario)
           alert(`Usuário vinculado com sucesso`)
         }
         catch (error: any) {
@@ -71,7 +71,7 @@ const Cadastro: React.FC = () => {
         }
       } else {
         try {
-          const parceiro = await api.buscaCadastro(usuario.cod_casal)
+          const parceiro = await apiAuth.buscaCadastro(usuario.cod_casal)
           if (parceiro == null) {
             alert(`Código não encontrado`)
           } else {
