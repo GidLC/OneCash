@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router";
 import Home from "./pages/dashboard/home";
@@ -9,25 +9,22 @@ import AddDespesa from "./pages/transacoes/despesas/addDespesa";
 import AddReceita from "./pages/transacoes/receitas/addReceita";
 import Cadastro from "./pages/autenticacao/cadastroUsuario";
 import AddCategoria from "./pages/categorias/addCategoria";
-import CadastroParceiro from "./pages/teste/cadastroParceiro";
 import AuthContext, { AutenticacaoProvider } from "./data/contexts/autenticaLogin";
 import CadastroBanco from "./pages/banco/cadastro_banco";
 import ReadBanco from "./pages/banco/readBanco";
 import UpdateReceita from "./pages/transacoes/receitas/updateReceita";
-import TesteCadastro from "./pages/teste/testeCadastro";
+import Teste from "./pages/teste";
+
 
 const AppRoutes: React.FC = () => {
 
-  //As rotas do front precisarão ser protegidas
-
-  const Private: React.FC<any> = ({ children }) => {
-    const { autenticado } = useContext(AuthContext) ?? {};
-    if (autenticado) {
+  /*const Private: React.FC<any> = ({ children }) => {
+    if (Auth?.user && Auth.user.autenticacao == 1) {
       return children
     } else {
       return <Redirect to="/login" />
     }
-  }
+  }*/
 
   return (
     <IonReactRouter>
@@ -53,7 +50,7 @@ const AppRoutes: React.FC = () => {
         </Route>
 
         <Route path="/saida">
-          <Saida />
+           <Saida />
         </Route>
 
         <Route path="/addDespesa">
@@ -73,9 +70,13 @@ const AppRoutes: React.FC = () => {
         </Route>
 
         <Route path="/updateReceita">
-          <UpdateReceita/>
+          <UpdateReceita />
         </Route>
-        
+
+        <Route path="/teste">
+          <Teste />
+        </Route>
+
         <Route exact path="/">
           <Redirect to="/login" />
         </Route>

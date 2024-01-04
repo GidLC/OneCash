@@ -1,4 +1,3 @@
-// config.js
 import express from 'express';
 import mysql from 'mysql2';
 import bodyParser from 'body-parser';

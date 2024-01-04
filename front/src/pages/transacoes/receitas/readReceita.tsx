@@ -19,7 +19,7 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { analyticsOutline} from "ionicons/icons";
 import MenuLateral from "../../../ui/components/MenuLateral/MenuLateral";
 import Header from "../../../ui/partials/HeaderHome/HeaderHome";
@@ -28,6 +28,7 @@ import BarraInferior from "../../../ui/partials/BarraInferior/BarraInferior";
 import './readReceita.css'
 import { useHistory } from "react-router";
 import { Capacitor } from "@capacitor/core";
+import AuthContext from "../../../data/contexts/autenticaLogin";
 
 type SQLItemReceitas = {
   id_receita: number;

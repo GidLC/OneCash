@@ -1,7 +1,9 @@
 import express from 'express';
-const router = express.Router();
+const receitaRouter = express.Router();
 import receitaController from '../../controllers/transacoes/receitaController.mjs'
 
-router.post('/cadastro', receitaController)
-router.delete('/apagar', receitaController)
-router.get('listarReceitas', receitaController)
+/*receitaRouter.post('/cadastro', receitaController)
+receitaRouter.delete('/apagar', receitaController)
+receitaRouter.get('/listarReceitas', receitaController)*/
+
+export default receitaRouter

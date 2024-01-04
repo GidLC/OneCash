@@ -1,5 +1,7 @@
-import React, { ReactNode, createContext, useContext, useState } from 'react';
+import React, { ReactNode, createContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { SQLiteDBConnection } from 'react-sqlite-hook';
+import useSQLiteDB from '../services/sqlite/useSQLiteDB';
 
 const AuthContext = createContext<AutenticaProps | undefined>(undefined);
 
@@ -10,10 +12,9 @@ interface UsuarioProps {
 }
 
 interface AutenticaProps {
-    usuario: {};
-    login: ({}: UsuarioProps) => void;
+    login: ({ }: UsuarioProps) => any;
     logout: () => void;
-    autenticado: any;
+    getAuth: () => any
 }
 
 interface AutenticacaoProviderProps {
@@ -21,43 +22,97 @@ interface AutenticacaoProviderProps {
 }
 
 export const AutenticacaoProvider: React.FC<AutenticacaoProviderProps> = ({ children }) => {
-    const [usuario, setUsuario] = useState({});
-    const [autenticado, setAutenticado] = useState();
+    const { performSQLAction, initialized } = useSQLiteDB();
     const navegador = useHistory();
 
-    const login = (userData: UsuarioProps) => {
-        setUsuario({
-            "id": userData.id,
-            "nome": userData.nome,
-            "cod_casal": userData.cod_casal
-        });
-        setAutenticado(1)
-        navegador.push("/home")
+    useEffect(() => {
+        if (initialized) {
+            getAuth();
+        }
+    }, [initialized]);
+
+    const getAuth = async () => {
+        try {
+            const queryResult = await new Promise<any[]>((resolve, reject) => {
+                performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+                    try {
+                        const respSelect = await db?.query(`SELECT * FROM autenticacao`);
+                        console.log('Dados retornados:', respSelect?.values);
+                        resolve(respSelect?.values || []);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            });
+
+            console.log('Resultados da consulta:', queryResult); // Verifica os dados retornados do SQLite
+            return queryResult;
+        } catch (error) {
+            alert((error as Error).message);
+            return [];
+        }
     };
 
-    const logout = () => {
-        setUsuario({});
-        navegador.push("/login");
-    };  
+    const login = async (userData: UsuarioProps) => {
+        try {
+            await new Promise<void>((resolve, reject) => {
+                performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+                    try {
+                        await db?.query(`INSERT INTO autenticacao (id_usuario, nome_usuario,
+                        cod_casal, autenticacao) VALUES(?,?,?,?);`, [userData.id, userData.nome, userData.cod_casal, 1])
+                        console.log('Dados inseridos com sucesso!');
+                        resolve();
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            });
+            navegador.push("/home")
+        } catch (error) {
+            alert((error as Error).message);
+        }
+
+        /*try {
+            performSQLAction(
+              async (db: SQLiteDBConnection | undefined) => {
+                await db?.query(`INSERT INTO autenticacao (id_usuario, nome_usuario, cod_casal, autenticacao) values (?,?,?,?);`, [
+                    userData.id, 
+                    userData.nome, 
+                    userData.cod_casal, 
+                    1
+                ]);
+                console.log(`Dados inseridos com sucesso`)
+              }
+            );
+          } catch (error) {
+            alert((error as Error).message);
+          }*/
+        //navegador.push("/home")
+        return 1
+    };
+
+
+    const logout = async () => {
+        try {
+            performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+                await db?.query(`DELETE FROM autenticacao`);
+            });
+        } catch (error) {
+            alert((error as Error).message);
+        }
+        navegador.push("/");
+    };
 
     return (
-        <AuthContext.Provider 
-        value={{
-                usuario,
+        <AuthContext.Provider
+            value={{
                 login,
                 logout,
-                autenticado }}>
+                getAuth
+            }}>
             {children}
         </AuthContext.Provider>
     );
-};
-
-export const autenticaUser = () => {
-    const contexto = useContext(AuthContext);
-    if (contexto === undefined) {
-        throw new Error('Autenticação mal sucedida');
-    }
-    return contexto;
 };
 
 export default AuthContext;

@@ -1,4 +1,4 @@
-import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonPage, IonRow } from '@ionic/react';
+import { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonPage, IonRow } from '@ionic/react';
 import './home.css';
 import BotaoMais from '../../ui/components/botoes/BotaoMais/BotaoMais';
 import MenuLateral from '../../ui/components/MenuLateral/MenuLateral';
@@ -20,8 +20,8 @@ function Home() {
   const Auth = useContext(AuthContext)
 
   useEffect(() => {
-    loadData(); 
-  }, []);
+    loadData(); // Carrega os dados da base de dados quando o componente é montado ou quando o banco de dados é inicializado
+  });
 
   const [itemsReceita, setItemsReceita] = useState<Array<SQLItem>>(); // Estado para rastrear os itens da base de dados
   const [itemsDespesa, setItemsDespesa] = useState<Array<SQLItem>>();
@@ -36,6 +36,8 @@ function Home() {
    * Realiza uma consulta na base de dados para carregar os itens.
    */
   const loadData = async () => {
+    const user = await Auth?.getAuth()
+    console.log(user)
     //SELECT da soma dos valores recebidos
 
     //SELECT das despesas pagas
@@ -44,7 +46,7 @@ function Home() {
 
     //SELECT das receitas do ente 2 do casal 
 
-    console.log(Auth?.usuario.nome)
+    //console.log(Auth?.usuario.nome)
   };
 
 
@@ -54,6 +56,7 @@ function Home() {
       <IonPage id="main-content">
         <IonHeader>
           <HeaderHome nome='HOME' />
+          <IonButton href='/teste'>TESTE</IonButton>
         </IonHeader>
 
         <IonContent>
@@ -104,7 +107,7 @@ function Home() {
                 <IonCol>
                   <IonCard color="light">
                     <IonCardHeader>
-                      <IonCardHeader>Receitas {Auth?.usuario.nome}:</IonCardHeader>
+                      <IonCardHeader>Receitas:</IonCardHeader>
                       <IonCardSubtitle>{`R$ ${receitasEnte1 || 0.00}`}</IonCardSubtitle>
                     </IonCardHeader>
                   </IonCard>

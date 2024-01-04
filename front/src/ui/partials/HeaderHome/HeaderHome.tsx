@@ -7,7 +7,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ nome }) => {
-  const Auth = useContext(AuthContext);
+  const Auth = useContext(AuthContext)
+  const user = Auth?.getAuth()
 
   return (
     <>
@@ -17,6 +18,7 @@ const Header: React.FC<HeaderProps> = ({ nome }) => {
             <IonRow>
               <IonCol>
                 <IonTitle size="large">{nome}</IonTitle>
+                <IonTitle size="small">Olá {user?.nome_usuario}</IonTitle>
               </IonCol>
               <IonCol size="auto">
                 <div>

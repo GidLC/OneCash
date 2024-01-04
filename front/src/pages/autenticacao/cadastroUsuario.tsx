@@ -76,6 +76,7 @@ const Cadastro: React.FC = () => {
             alert(`Código não encontrado`)
           } else {
             const conf: any = confirm(`Você será vinculado ao seu parceiro ${parceiro.nome_usuario}`)
+            console.log(JSON.stringify(parceiro))
             if (confirm(conf) == true) {
               setParcEncontrado(true)
             }

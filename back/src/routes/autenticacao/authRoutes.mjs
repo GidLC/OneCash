@@ -1,10 +1,10 @@
 import express from 'express';
-const router = express.Router();
+const authRouter = express.Router();
 import authController from '../../controllers/autenticacao/authController.mjs';
 
-router.post('/cadastro', authController.cadastroUsuario)
-router.get('/buscaCadastro/:codigo', authController.buscaCadastro)
-router.put('/vincCadastro', authController.vincCadastro)
-router.post('/login', authController.loginUsuario)
+authRouter.post('/cadastro', authController.cadastroUsuario)
+authRouter.get('/buscaCadastro/:codigo', authController.buscaCadastro)
+authRouter.put('/vincCadastro', authController.vincCadastro)
+authRouter.post('/login', authController.loginUsuario)
 
-export default router;
+export default authRouter;
